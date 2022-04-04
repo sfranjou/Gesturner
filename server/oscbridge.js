@@ -1,5 +1,15 @@
-var osc = require("osc");
+// var OSC = require("osc-js");
 
+var port = 2399
+var host = "127.0.0.1"
+
+// osc = new OSC()
+
+
+var OSC = require("osc-js");
+var osc = new OSC()
+console.log("OSC: ")
+console.log(osc)
 // Create an osc.js UDP Port listening on port 57121.
 var udpPort = new osc.UDPPort({
     localAddress: "0.0.0.0",
@@ -33,5 +43,16 @@ udpPort.on("ready", function ()
                 value: 100
             }
         ]
-    }, "127.0.0.1", 57110);
+    }, host, port);
 });
+
+function oscSend(addr, cur_args)
+{
+
+    udpPort.send({
+        address: addr,
+        args: cur_args
+    }, host, port);
+}
+
+module.exports = oscSend
