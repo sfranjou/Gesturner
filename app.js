@@ -44,7 +44,7 @@ app.post("/sendosc", (req, res) =>
 
 
 
-    var msg = "\rh_x " + req.body[rightHandIdx].x.toString()
+    var msg = Buffer.from("/logic/rh_x ,f ", "hex") + Nuffer.from(req.body[rightHandIdx].x, "hex")
     client.send(msg, 0, msg.length, port, host);
     // client.send('Hello2World!', 0, 12, port, host);
     // client.send('Hello3World!', 0, 12, port, host, function (err, bytes)
