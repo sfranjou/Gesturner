@@ -1,18 +1,24 @@
 // import { sendOsc } from './server/oscbridge.js'
 const osc = require('./server/oscbridge.js')
-console.log("OSC:" + osc)
+// console.log("OSC:" + osc)
 // const reaperbridge = require('./server/reaperbridge.js')
-
+// const pose = require('./public/src/pose.js')
 const express = require('express')
 const app = express()
 const port = 3000
 var host = "127.0.0.1"
 // var dgram = require('dgram');
 // var client = dgram.createSocket('udp4');
-
-
 const leftHandIdx = 15
 const rightHandIdx = 16
+
+//for normalizing
+const yMax = 0.7
+const yMin = 0.3
+
+// import { test } from './public/shared.js'
+// const Shared = require('./public/shared.js')
+// console.log("app js: " + Shared.test)
 
 
 
@@ -28,54 +34,47 @@ app.listen(port, () =>
     console.log(`Example app listening on port ${ port }`)
 })
 
+//nomralize from range to target range, and clips if exceeds the range, Defaults to 0 1 as target
+let normalize = (val, low, high, targetLow = 0, targetHigh = 1) =>
+{
+    let tval = (val - low) / (high - low) // brings it to 0-1 range
+    tval *= (targetHigh - targetLow)
+    tval += targetLow
+    if (tval >= targetHigh) return targetHigh
+    if (tval <= targetLow) return targetLow
+    return tval
+}
+
 app.post("/sendosc", (req, res) =>
 {
     // console.log("sendosc api endpoint called, got data")
 
-    if (!req.body[rightHandIdx].x)
+    if (!req.body.pose[rightHandIdx].y)
+        if (!req.body.pose[rightHandIdx].y)
+        {
+            console.log("no right hand")
+            return
+        }
+
+    let val = req.body.pose[rightHandIdx].y
+
+    val = normalize(1 - val, 0.2, 0.8)
+
+
+    if (!req.body.active) 
     {
-        console.log("no right hand")
-        return
+        //defautl to value 0 if inactive
+        val = 0
     }
 
-    console.log(req.body[rightHandIdx].x)
-
-    osc.oscSend("/x", [{ type: "f", value: req.body[0].x }])
-    // console.log("headers: " + req.headers)
+    // console.log(req.body.pose[rightHandIdx].x)
+    console.log(val)
 
 
-
-
-
-    // var msg = Buffer.from("/logic/rh_x ,f ", "hex") + Buffer.from(req.body[rightHandIdx].x, "hex")
-    // client.send(msg, 0, msg.length, port, host);
-    // client.send('Hello2World!', 0, 12, port, host);
-    // client.send('Hello3World!', 0, 12, port, host, function (err, bytes)
-    // {
-    //     client.close();
-    // });
+    // osc.oscSend("/y", [{ type: "f", value: req.body.pose[rightHandIdx].y }])
+    osc.oscSend("/y", [{ type: "f", value: val }])
+    // document.getElementById("right-hand-y-norm").textContent = "Right Hand y norm: " + val;
 
     res.send("Sent Osc message");
 });
 
-
-// app.post("/closeosc", (req, res) =>
-// {
-//     console.log("closing udp connection")
-
-//     // osc.sendOsc("/x", [{ x: req.body[0].x }])
-//     // console.log("headers: " + req.headers)
-
-
-
-
-//     var client = dgram.createSocket('udp4');
-
-//     var msg = 'Closing connection'
-//     client.send(msg, 0, msg.length, port, host, function (err, bytes)
-//     {
-//         client.close();
-//     });
-
-//     res.send("Sent Osc message");
-// });

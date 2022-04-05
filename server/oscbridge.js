@@ -54,7 +54,7 @@ udpPort.on("ready", function ()
 function oscSend(addr, cur_args)
 {
 
-    console.log('sending osc message: ' + cur_args)
+    // console.log('sending osc message: ' + cur_args)
     udpPort.send({
         address: addr,
         args: cur_args
