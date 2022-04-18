@@ -1,8 +1,15 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
+    <style>
+      .debug {
+        /* width: 200; */
+        /* height: 50%; */
+        margin-right: 400px;
+      }
+    </style>
     <meta charset="UTF-8" />
-    <title>My app</title>
+    <title>Gesturner</title>
 
     <!-- <script>
       window.addEventListener("load", pl.v.updateBook.setupUserInterface);
@@ -19,14 +26,14 @@
   </head>
 </html>
 <body>
-  <h1>My App</h1>
+  <h1>Gesturner</h1>
   <!-- <p>udpo test script</p>
   <script src="src/oscbridge.js"></script> -->
-  <p>some kind of test</p>
   <script type="module" src="src/pose.js"></script>
-  <h2 id="right-hand-x">Right Hand x: NA</h2>
-  <h2 id="right-hand-y">Right Hand y: NA</h2>
+  <h3 id="right-hand-x">Right Hand x: NA</h3>
+  <h3 id="right-hand-y">Right Hand y: NA</h3>
   <!-- <h2 id="right-hand-y-norm">Right Hand y norm: NA</h2> -->
-  <h2 id="active-indicator">Active? No</h2>
-  <div id="debugger-holder"></div>
+  <h3 id="active-indicator">Active? No</h3>
+  <div id="debugger-holder" class="debug" style="position: absolute"></div>
+  <canvas id="debugger-canvas" style="position: absolute"></canvas>
 </body>
