@@ -68,7 +68,7 @@ app.post("/sendosc", (req, res) =>
     }
 
     // console.log(req.body.pose[rightHandIdx].x)
-    console.log(val)
+    // console.log(val)
 
 
     // osc.oscSend("/y", [{ type: "f", value: req.body.pose[rightHandIdx].y }])

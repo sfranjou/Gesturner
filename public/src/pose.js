@@ -12,7 +12,13 @@ const leftHipIdx = 23
 const rightShoulderIdx = 12
 const leftShoulderIdx = 11
 
+const rightEarIdx = 8
+const leftEarIdx = 7
+
 const activeZoneMarginX = 0.20
+
+const headXMargin = 0
+const headHeight = 0.3
 
 let getActiveZoneXThresh = (data) =>
 {
@@ -27,6 +33,39 @@ let getActiveZoneXThresh = (data) =>
     return xBoundary
 }
 
+
+// return objkect with x,y coordinates for x, y, width, height
+let getHeadBounds = (data) =>
+{
+    if (!data.pose.poseLandmarks) return null
+    let rightEar = data.pose.poseLandmarks[rightEarIdx]
+    let leftEar = data.pose.poseLandmarks[leftEarIdx]
+
+    if (!rightEar || !leftEar)
+        return null
+    //TODO: add x margin
+
+    // let topLeft = { x: leftEar.x, y: leftEar.y - headHeight / 2 }
+    // let topRight = { x: rightEar.x, y: rightEar.y - headHeight / 2 }
+    // let bottomLeft = { x: leftEar.x, y: leftEar.y + headHeight / 2 }
+    // let bottomRight = { x: rightEar.x, y: rightEar.y + headHeight / 2 }
+
+    // let bounds = {
+    //     topLeft: topLeft,
+    //     topRight: topRight,
+    //     bottomLeft: bottomLeft,
+    //     bottomRight: bottomRight
+    // }
+
+    let bounds = {
+        x: leftEar.x,
+        y: leftEar.y - headHeight / 2,
+        height: headHeight,
+        width: Math.abs(leftEar.x - rightEar.x),
+    }
+
+    return bounds;
+}
 
 // returns true if the hand is in tje active zone
 let isActive = (data) =>
@@ -44,7 +83,7 @@ let isActive = (data) =>
 
     // normalize
     // let rightHandXNorm = rightHandX / handsfree.debug.$video.videoWidth
-    console.log(rightHandX)
+    // console.log(rightHandX)
 
     // also require y osition higher than average of the hip and shoudler maybe?
 
@@ -75,8 +114,12 @@ const handsfree = new Handsfree({
 handsfree.enablePlugins('browser')
 
 //takes in noirmalitve corodinates
-let drawActiveZone = (activeZoneXThresh) =>
+let drawActiveZone = (data) =>
 {
+
+    let activeZoneXThresh = getActiveZoneXThresh(data)
+    if (!activeZoneXThresh) return null
+
     const canvas = document.getElementById("debugger-canvas") // first make a index . html with a canvas height and width and id of pong or whatever
     // and then we have to get access to our context to draw on it
     const context = canvas.getContext('2d')
@@ -96,18 +139,30 @@ let drawActiveZone = (activeZoneXThresh) =>
 
     // source for debug eleme4nt code https://github.com/MIDIBlocks/handsfree/blob/481f7cdba849940e1472a370e7ab7418487629a8/src/handsfree.js#L840  
 
-    // console.log(height, width, canvas.style.height, canvas.style.width)
+
+    // Draw the gesture active zone
     canvas.style.height = height.toString() + "px";
     canvas.style.width = width.toString() + "px";
-    // console.log(height, width, canvas.style.height, canvas.style.width)
-    context.fillStyle = 'rgba(225,0,0,0.5)';
-    // context.fillStyle = 'green';
-    let rectWidth = canvas.width * activeZoneXThresh
-    let xPos = canvas.width * (1 - activeZoneXThresh)
+
     context.clearRect(0, 0, canvas.width, canvas.height);
-    // context.fillRect(0, 0, width, height);
-    context.fillRect(xPos, 0, rectWidth, canvas.height);
-    // context.fillRect(10, 10, 250, 250);
+
+
+    let activeRectWidth = canvas.width * activeZoneXThresh
+    let activeRextXPos = canvas.width * (1 - activeZoneXThresh)
+
+    context.fillStyle = 'rgba(225,0,0,0.5)';
+    context.fillRect(activeRextXPos, 0, activeRectWidth, canvas.height);
+
+
+    //draw head thing
+    let headBounds = getHeadBounds(data);
+    if (!headBounds) return null;
+    console.log(headBounds)
+
+    context.fillStyle = 'rgba(0,225,0,0.5)';
+    context.fillRect((1 - headBounds.x) * canvas.width, headBounds.y * canvas.height, headBounds.width * canvas.width, headBounds.height * canvas.height);
+
+
 }
 
 // reeference for plugins: https://handsfree.js.org/guide/the-loop.html#basic-plugins
@@ -145,7 +200,8 @@ handsfree.use('UIupdater', (data) =>
     document.getElementById("right-hand-y").textContent = "Right Hand y: " + data.pose.poseLandmarks[rightHandIdx].y;
     document.getElementById("active-indicator").textContent = "Is Active: " + isActive(data);
 
-    drawActiveZone(getActiveZoneXThresh(data));
+    // drawActiveZone(getActiveZoneXThresh(data));
+    drawActiveZone(data);
 })
 
 // handsfree.plugin.consoleLogger.enable()
