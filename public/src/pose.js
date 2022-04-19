@@ -15,10 +15,139 @@ const leftShoulderIdx = 11
 const rightEarIdx = 8
 const leftEarIdx = 7
 
+const rightThumbIdx = 22
+const rightWristIdx = 16
+
+const rightEyeIdx = 5;
+const mouthRightIdx = 10
+
 const activeZoneMarginX = 0.20
 
 const headXMargin = 0
-const headHeight = 0.3
+// const headHeight = 0.3
+const headBoxHeightScaling = 2; // height of head bounds compared to eye-mouth distance
+const headBoxYOffset = 2; //offset in terms of eye-mouth distance
+
+
+const activeColor = 'rgba(0,225,0,0.5)';
+const inactiveColor = 'rgba(225,0,0,0.5)';
+
+const swipeBoundsColor = 'rgba(0,0,225,0.5)';
+
+//TODO: add timeout to prevent suprious swipe gestures
+class SwipeGesture
+{
+    constructor()
+    {
+        this.swipeStartSide = null;
+        this.swiping = false;
+        this.previousPos = null
+    }
+
+    // returns null, "swipeLeft" or "swipeRight"
+    update(data)
+    {
+        if (!data.pose.poseLandmarks) return null
+        let headBounds = getHeadBounds(data);
+        if (!headBounds) return null;
+        let rightHand = data.pose.poseLandmarks[rightWristIdx];
+        if (!rightHand) return null;
+
+
+
+        // if we start from null, just update pos and return
+        if (!this.previousPos)
+        {
+            this.previousPos = rightHand;
+            return null
+        }
+
+        let rightBoundary = headBounds.x - headBounds.width
+        let leftBoundary = headBounds.x
+
+        let bottomBoundary = headBounds.y + headBounds.height;
+        let topBoundary = headBounds.y;
+        // console.log(rightHand.y)
+
+        if (rightHand.y < topBoundary || rightHand.y > bottomBoundary)
+        {
+            this.swiping = null;
+            this.swipeStartSide = null;
+            this.previousPos = rightHand;
+            // console.log("out of bounds y");
+            return null
+        }
+
+        else if (!this.swiping && (rightHand.x < rightBoundary || rightHand.x > leftBoundary))
+        {
+            this.swiping = null;
+            this.swipeStartSide = null;
+            this.previousPos = rightHand;
+            // console.log("out of bounds x");
+            return null
+        }
+
+        // console.log(rightHand.x, rightBoundary, leftBoundary)
+
+
+        // detect entrance from right (small x)
+        if (!this.swiping && this.previousPos.x < rightBoundary && (leftBoundary >= rightHand.x >= rightBoundary))
+        {
+            this.swiping = true
+            this.swipeStartSide = 'right'
+            // console.log("enter on right")
+        }
+        else if (!this.swiping && this.previousPos.x > leftBoundary && (leftBoundary >= rightHand.x >= rightBoundary))
+        {
+            this.swiping = true
+            this.swipeStartSide = 'left'
+            // console.log("enter on left")
+        }
+
+        // now handle the exiting the thing case
+        // if we were not swiping and didn;t enter, then we exit here
+        else if (!this.swiping)
+        {
+            this.swiping = null;
+            this.swipeStartSide = null;
+            // console.log("not swiping")
+        }
+        //here this.swiping is true: we have entered. Just check the exit side
+        else if (this.swipeStartSide = 'left' && rightHand.x < rightBoundary)
+        {
+            this.swiping = null;
+            this.swipeStartSide = null;
+
+            this.previousPos = rightHand
+            return "swipeRight"
+        }
+        else if (this.swipeStartSide = "right" && rightHand.x > leftBoundary)
+        {
+            this.swiping = null;
+            this.swipeStartSide = null;
+
+            this.previousPos = rightHand
+            return "swipeLeft"
+        }
+        else 
+        {
+            // we exited the same side we arrive on
+            // console.log(this.swiping, this.swipeStartSide, this.previousPos)
+            // this.swiping = null;
+            // this.swipeStartSide = null;
+            this.previousPos = rightHand
+            // console.log("youp")
+        }
+
+
+
+        this.previousPos = rightHand
+
+
+    }
+}
+
+let swipeGesture = new SwipeGesture();
 
 let getActiveZoneXThresh = (data) =>
 {
@@ -56,11 +185,12 @@ let getHeadBounds = (data) =>
     //     bottomLeft: bottomLeft,
     //     bottomRight: bottomRight
     // }
+    let headHeight = Math.abs(data.pose.poseLandmarks[rightEyeIdx].y - data.pose.poseLandmarks[mouthRightIdx].y);
 
     let bounds = {
         x: leftEar.x,
-        y: leftEar.y - headHeight / 2,
-        height: headHeight,
+        y: leftEar.y - headHeight / 2 + headHeight * headBoxYOffset,
+        height: headHeight * headBoxHeightScaling,
         width: Math.abs(leftEar.x - rightEar.x),
     }
 
@@ -150,16 +280,18 @@ let drawActiveZone = (data) =>
     let activeRectWidth = canvas.width * activeZoneXThresh
     let activeRextXPos = canvas.width * (1 - activeZoneXThresh)
 
-    context.fillStyle = 'rgba(225,0,0,0.5)';
+    // context.fillStyle = 'rgba(225,0,0,0.5)';
+    context.fillStyle = isActive(data) ? activeColor : inactiveColor;
     context.fillRect(activeRextXPos, 0, activeRectWidth, canvas.height);
 
 
     //draw head thing
     let headBounds = getHeadBounds(data);
     if (!headBounds) return null;
-    console.log(headBounds)
+    // console.log(headBounds)
 
-    context.fillStyle = 'rgba(0,225,0,0.5)';
+    // context.fillStyle = 'rgba(0,225,0,0.5)';
+    context.fillStyle = swipeBoundsColor;
     context.fillRect((1 - headBounds.x) * canvas.width, headBounds.y * canvas.height, headBounds.width * canvas.width, headBounds.height * canvas.height);
 
 
@@ -175,7 +307,9 @@ handsfree.use('consoleLogger', (data) =>
     if (!data.pose.poseLandmarks) return
 
     // console.log(data.pose.poseLandmarks)
-
+    let gesture = swipeGesture.update(data);
+    if (gesture)
+        console.log(gesture)
 
     // https://stackoverflow.com/questions/6396101/pure-javascript-send-post-data-without-a-form
     fetch("/sendosc", {
@@ -209,5 +343,5 @@ handsfree.use('UIupdater', (data) =>
 
 // module.exports = { leftHandIdx, rightHandIdx }
 
-
+// handsfree.hideDebugger()
 handsfree.start()
