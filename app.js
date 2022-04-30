@@ -28,6 +28,10 @@ app.use(express.urlencoded());
 
 app.use("/public", express.static('public'))
 
+app.get('/', function (req, res)
+{
+    res.redirect('/public/index.html');
+});
 
 app.listen(port, () =>
 {
@@ -70,9 +74,19 @@ app.post("/sendosc", (req, res) =>
     // console.log(req.body.pose[rightHandIdx].x)
     // console.log(val)
 
+    let gestureVal = 0;
+    if (req.body.swipe)
+    {
+        console.log(req.body.swipe)
+        if (req.body.swipe === "swipeRight")
+            gestureVal = 1
+        else if (req.body.swipe === "swipeLeft")
+            gestureVal = -1
+    }
 
     // osc.oscSend("/y", [{ type: "f", value: req.body.pose[rightHandIdx].y }])
     osc.oscSend("/y", [{ type: "f", value: val }])
+    osc.oscSend("/swipe", [{ type: "f", value: gestureVal }])
     // document.getElementById("right-hand-y-norm").textContent = "Right Hand y norm: " + val;
 
     res.send("Sent Osc message");

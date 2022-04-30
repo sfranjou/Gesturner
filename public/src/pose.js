@@ -21,12 +21,12 @@ const rightWristIdx = 16
 const rightEyeIdx = 5;
 const mouthRightIdx = 10
 
-const activeZoneMarginX = 0.20
+const activeZoneMarginX = 0.10
 
 const headXMargin = 0
 // const headHeight = 0.3
-const headBoxHeightScaling = 2; // height of head bounds compared to eye-mouth distance
-const headBoxYOffset = 2; //offset in terms of eye-mouth distance
+const headBoxHeightScaling = 3; // height of head bounds compared to eye-mouth distance
+const headBoxYOffset = 1; //offset in terms of eye-mouth distance
 
 
 const activeColor = 'rgba(0,225,0,0.5)';
@@ -50,7 +50,7 @@ class SwipeGesture
         if (!data.pose.poseLandmarks) return null
         let headBounds = getHeadBounds(data);
         if (!headBounds) return null;
-        let rightHand = data.pose.poseLandmarks[rightWristIdx];
+        let rightHand = data.pose.poseLandmarks[rightThumbIdx];
         if (!rightHand) return null;
 
 
@@ -234,6 +234,11 @@ let isActive = (data) =>
 const handsfree = new Handsfree({
     // Show debug inside a specific element
     showDebug: true,
+    // - Note: Setting this to true may result in better accuracy 
+    upperBodyOnly: false,
+
+    // Helps reduce jitter over multiple frames if true
+    smoothLandmarks: true,
     setup: {
         wrap: {
             $parent: document.querySelector('#debugger-holder')
@@ -309,16 +314,24 @@ handsfree.use('consoleLogger', (data) =>
     // console.log(data.pose.poseLandmarks)
     let gesture = swipeGesture.update(data);
     if (gesture)
+    {
+        // var flashMessages = document.getElementsByClassName('js-flash-message');
+        // //show first flash message avilable in your page
+        // showFlashMessage(flashMessages[0]);
         console.log(gesture)
 
+    }
+
+
     // https://stackoverflow.com/questions/6396101/pure-javascript-send-post-data-without-a-form
+    // send data for the expression
     fetch("/sendosc", {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json, text/plain, */*',
         },
-        body: JSON.stringify({ active: isActive(data), pose: data.pose.poseLandmarks })
+        body: JSON.stringify({ active: isActive(data), pose: data.pose.poseLandmarks, swipe: gesture })
         // body: { name: "sebastian" }
     }).then(res =>
     {
@@ -326,16 +339,44 @@ handsfree.use('consoleLogger', (data) =>
     });
 })
 
+
+//TODO share somehow with frontend
+//nomralize from range to target range, and clips if exceeds the range, Defaults to 0 1 as target
+let normalize = (val, low, high, targetLow = 0, targetHigh = 1) =>
+{
+    let tval = (val - low) / (high - low) // brings it to 0-1 range
+    tval *= (targetHigh - targetLow)
+    tval += targetLow
+    if (tval >= targetHigh) return targetHigh
+    if (tval <= targetLow) return targetLow
+    return tval
+}
+
+
+// function showFlashMessage(element)
+// {
+//     var event = new CustomEvent('showFlashMessage');
+//     element.dispatchEvent(event);
+// };
+
+
+
 handsfree.use('UIupdater', (data) =>
 {
     if (!data.pose.poseLandmarks) return
 
-    document.getElementById("right-hand-x").textContent = "Right Hand x: " + data.pose.poseLandmarks[rightHandIdx].x;
-    document.getElementById("right-hand-y").textContent = "Right Hand y: " + data.pose.poseLandmarks[rightHandIdx].y;
-    document.getElementById("active-indicator").textContent = "Is Active: " + isActive(data);
+    // document.getElementById("right-hand-x").textContent = "Right Hand x: " + data.pose.poseLandmarks[rightHandIdx].x;
+    // document.getElementById("right-hand-y").textContent = "Right Hand y: " + data.pose.poseLandmarks[rightHandIdx].y;
+    let exprVal = normalize(1 - data.pose.poseLandmarks[rightHandIdx].y, 0.2, 0.8);
+    document.getElementById("expression-indicator").textContent = "Expression: " + exprVal;
+    // document.getElementById("active-indicator").textContent = "Is Active: " + isActive(data);
 
     // drawActiveZone(getActiveZoneXThresh(data));
     drawActiveZone(data);
+
+
+
+
 })
 
 // handsfree.plugin.consoleLogger.enable()
