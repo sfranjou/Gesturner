@@ -27,6 +27,13 @@ const mouthRightIdx = 10
 let activeZoneMarginX = 0.10
 let activeZoneCalibrationOn = false
 
+let lowDeadZone = 0.2
+let lowDeadZoneCalibrationOn = false
+
+let highDeadZone = 0.8
+let highDeadZoneCalibrationOn = false
+
+
 const headXMargin = 0
 // const headHeight = 0.3
 const headBoxHeightScaling = 3; // height of head bounds compared to eye-mouth distance
@@ -293,6 +300,10 @@ let drawActiveZone = (data) =>
     context.fillStyle = isActive(data) ? activeColor : inactiveColor;
     context.fillRect(activeRectXPos, 0, activeRectWidth, canvas.height);
 
+    // draw nonDead zone darker
+    context.fillStyle = 'rgba(0,0,0,0.5)';
+    // context.fillRect(activeRectXPos, canvas.height * highDeadZone, activeRectWidth, canvas.height * (highDeadZone - lowDeadZone));
+    context.fillRect(activeRectXPos, canvas.height * (1 - highDeadZone), activeRectWidth, canvas.height * (highDeadZone - lowDeadZone));
 
     //draw head thing
     let headBounds = getHeadBounds(data);
@@ -303,6 +314,16 @@ let drawActiveZone = (data) =>
     context.fillStyle = swipeBoundsColor;
     context.fillRect((1 - headBounds.x) * canvas.width, headBounds.y * canvas.height, headBounds.width * canvas.width, headBounds.height * canvas.height);
 
+    //draw low dead zone:
+
+    // context.fillStyle = 'rgba(0,0,255,1)';
+    // // context.lineWidth = 100;
+    // context.beginPath();
+    // context.moveTo(activeRectXPos, canvas.height * lowDeadZOne);
+    // context.moveTo(activeRectXPos + activeRectWidth, canvas.height * lowDeadZOne);
+    // context.moveTo(0, 0)
+    // context.moveTo(canvas.width, canvas.height)
+    // context.stroke();
 
 }
 
@@ -371,7 +392,10 @@ handsfree.use('UIupdater', (data) =>
 
     // document.getElementById("right-hand-x").textContent = "Right Hand x: " + data.pose.poseLandmarks[rightHandIdx].x;
     // document.getElementById("right-hand-y").textContent = "Right Hand y: " + data.pose.poseLandmarks[rightHandIdx].y;
-    let exprVal = normalize(1 - data.pose.poseLandmarks[rightHandIdx].y, 0.2, 0.8);
+
+
+    // let exprVal = normalize(1 - data.pose.poseLandmarks[rightHandIdx].y, 0.2, 0.8);
+    let exprVal = normalize(1 - data.pose.poseLandmarks[rightHandIdx].y, lowDeadZone, highDeadZone);
     document.getElementById("expression-indicator").textContent = "Expression: " + exprVal;
     // document.getElementById("active-indicator").textContent = "Is Active: " + isActive(data);
 
@@ -380,46 +404,48 @@ handsfree.use('UIupdater', (data) =>
 
     if (activeZoneCalibrationOn)
     {
-        if (!data.pose.poseLandmarks) return null
-
-        // let rightHipX = data.pose.poseLandmarks[rightHipIdx].x
-        let rightShoulderX = data.pose.poseLandmarks[rightShoulderIdx].x
-        let rightHandX = data.pose.poseLandmarks[rightHandIdx].x
-
-        if (!rightShoulderX) return null
-
-        // let xBoundary = rightShoulderX - activeZoneMarginX
-
-        activeZoneMarginX = - rightHandX + rightShoulderX
+        setActiveZonePosition(data);
     }
-    updateKnob(exprVal * 100);
+
+    updateKnob(isActive(data) ? exprVal * 100 : 0);
 
     drawActiveZone(data);
-
 
 
 })
 
 
-export function calibrateActiveZone()
+export function startCalibration()
 {
     const countdown = document.getElementById("countdown");
     const timeInterval = 1000;
 
+    //calibrate active zone X position
     activeZoneCalibrationOn = true;
 
     setTimeout(() => { countdown.innerText = "3" }, timeInterval)
     setTimeout(() => { countdown.innerText = "2" }, timeInterval * 2)
     setTimeout(() => { countdown.innerText = "1" }, timeInterval * 3)
     setTimeout(() => { countdown.innerText = ""; activeZoneCalibrationOn = false; }, timeInterval * 4)
+
+    // lowDeadZoneCalibrationOn = true;
+
+
+}
+
+function setActiveZonePosition(data)
+{
+    if (!data.pose.poseLandmarks) return null
+    // let rightHipX = data.pose.poseLandmarks[rightHipIdx].x
+    let rightShoulderX = data.pose.poseLandmarks[rightShoulderIdx].x
+    let rightHandX = data.pose.poseLandmarks[rightHandIdx].x
+    if (!rightShoulderX) return null
+    activeZoneMarginX = - rightHandX + rightShoulderX
 }
 
 const calibrateButton = document.getElementById("calibrate-button")
-calibrateButton.addEventListener('click', calibrateActiveZone)
-// handsfree.plugin.consoleLogger.enable()
-// handsfree.plugin.consoleLogger.disable()
+calibrateButton.addEventListener('click', startCalibration)
 
-// module.exports = { leftHandIdx, rightHandIdx }
 
 // handsfree.hideDebugger()
 handsfree.start()
