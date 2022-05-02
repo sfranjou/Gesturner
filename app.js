@@ -79,9 +79,13 @@ app.post("/sendosc", (req, res) =>
     {
         console.log(req.body.swipe)
         if (req.body.swipe === "swipeRight")
-            gestureVal = 1
+        {
+            gestureVal = 1;
+        }
         else if (req.body.swipe === "swipeLeft")
-            gestureVal = -1
+        {
+            gestureVal = -1;
+        }
     }
 
     // osc.oscSend("/y", [{ type: "f", value: req.body.pose[rightHandIdx].y }])

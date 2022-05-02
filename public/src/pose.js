@@ -3,6 +3,9 @@
 // import { test } from '../shared.js'
 // console.log("pose js: " + test)
 // const Handsfree = require("handsfree")
+import { updateKnob } from "./pureknob.js"
+import { postMessage } from "./swipeMessage.js"
+
 const leftHandIdx = 15
 const rightHandIdx = 16
 
@@ -318,8 +321,8 @@ handsfree.use('consoleLogger', (data) =>
         // var flashMessages = document.getElementsByClassName('js-flash-message');
         // //show first flash message avilable in your page
         // showFlashMessage(flashMessages[0]);
-        console.log(gesture)
-
+        console.log(gesture);
+        postMessage(gesture);
     }
 
 
@@ -373,6 +376,7 @@ handsfree.use('UIupdater', (data) =>
 
     // drawActiveZone(getActiveZoneXThresh(data));
     drawActiveZone(data);
+    updateKnob(exprVal * 100);
 
 
 
