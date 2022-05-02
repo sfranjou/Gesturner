@@ -33,6 +33,7 @@ let lowDeadZoneCalibrationOn = false
 let highDeadZone = 0.8
 let highDeadZoneCalibrationOn = false
 
+let audioFeedback = true
 
 const headXMargin = 0
 // const headHeight = 0.3
@@ -421,44 +422,71 @@ export function startCalibration()
 {
     const countdown = document.getElementById("countdown");
     const timeInterval = 1000;
+    let schedTime = 0;
+    let timeIdx = 0
 
     const calibrationIndicator = document.getElementById("calibration-indicator")
     //calibrate active zone X position
-    activeZoneCalibrationOn = true;
 
     calibrationIndicator.innerText = "Calibrating Active Zone";
 
-    setTimeout(() => { countdown.innerText = "3" }, timeInterval)
-    setTimeout(() => { countdown.innerText = "2" }, timeInterval * 2)
-    setTimeout(() => { countdown.innerText = "1" }, timeInterval * 3)
+    if (audioFeedback)
+    {
+        window.speechSynthesis.speak(new SpeechSynthesisUtterance('Beginning Calibration. The rectangle on the right represents the active zone. The poarameter control will only engage when your right hand is in the active zone.'));
+        window.speechSynthesis.speak(new SpeechSynthesisUtterance('Please hold your right hand at the limit at which you want parameter control to engage'));
+        schedTime += timeInterval * 2;
+        timeIdx = timeIdx + 15;
+    }
+
+
+    setTimeout(() => { countdown.innerText = "3"; activeZoneCalibrationOn = true; }, timeInterval * timeIdx++)
+    setTimeout(() => { countdown.innerText = "2" }, timeInterval * timeIdx++)
+    setTimeout(() => { countdown.innerText = "1" }, timeInterval * timeIdx++)
     setTimeout(() =>
     {
         countdown.innerText = "";
         activeZoneCalibrationOn = false;
-    }, timeInterval * 4)
+    }, timeInterval * timeIdx++);
+    // schedTime += 2 * timeInterval;
 
 
-
-
+    if (audioFeedback)
+    {
+        // setTimeout(() => window.speechSynthesis.speak(new SpeechSynthesisUtterance('Calibrating the height of the minimum value')), schedTime);
+        setTimeout(() => window.speechSynthesis.speak(new SpeechSynthesisUtterance('Please hold your right hand at the height corresponding to the minimum parameter value, zero')), timeInterval * timeIdx++);
+        timeIdx += 3;
+    }
     setTimeout(() =>
     {
+
         lowDeadZoneCalibrationOn = true;
         calibrationIndicator.innerText = "Calibrating Low dead zone";
         countdown.innerText = "3";
-    }, timeInterval * 5)
-    setTimeout(() => { countdown.innerText = "2" }, timeInterval * 6)
-    setTimeout(() => { countdown.innerText = "1" }, timeInterval * 7)
-    setTimeout(() => { countdown.innerText = ""; lowDeadZoneCalibrationOn = false; }, timeInterval * 8)
+    }, timeInterval * timeIdx++);
+    setTimeout(() => { countdown.innerText = "2" }, timeInterval * timeIdx++);
+    setTimeout(() => { countdown.innerText = "1" }, timeInterval * timeIdx++);
+    setTimeout(() => { countdown.innerText = ""; lowDeadZoneCalibrationOn = false; }, timeInterval * timeIdx++);
+
+    if (audioFeedback)
+    {
+        setTimeout(() => window.speechSynthesis.speak(new SpeechSynthesisUtterance('Please hold your right hand at the height corresponding to the maximum parameter value, one')), timeInterval * timeIdx++)
+        timeIdx += 3;
+    }
 
     setTimeout(() =>
     {
         highDeadZoneCalibrationOn = true;
         calibrationIndicator.innerText = "Calibrating high dead zone";
         countdown.innerText = "3";
-    }, timeInterval * 9)
-    setTimeout(() => { countdown.innerText = "2" }, timeInterval * 10)
-    setTimeout(() => { countdown.innerText = "1" }, timeInterval * 11)
-    setTimeout(() => { countdown.innerText = ""; highDeadZoneCalibrationOn = false; calibrationIndicator.innerText = "Calibrating done"; }, timeInterval * 12)
+    }, timeInterval * timeIdx++);
+    setTimeout(() => { countdown.innerText = "2" }, timeInterval * timeIdx++);
+    setTimeout(() => { countdown.innerText = "1" }, timeInterval * timeIdx++);
+    setTimeout(() =>
+    {
+        countdown.innerText = ""; highDeadZoneCalibrationOn = false; calibrationIndicator.innerText = "Calibrating complete";
+        window.speechSynthesis.speak(new SpeechSynthesisUtterance('Calibration complete'))
+    }, timeInterval * timeIdx++);
+
 
 
 }
@@ -498,6 +526,11 @@ function setHighDeadZonePosition(data)
 const calibrateButton = document.getElementById("calibrate-button")
 calibrateButton.addEventListener('click', startCalibration)
 
+const audioFeedbackButton = document.getElementById('audio-feedback-button');
+audioFeedbackButton.innerText = audioFeedback ? "Speech Feedback ON" : "Speech Feedback OFF"
+audioFeedbackButton.style.background = audioFeedback ? 'green' : 'red'
+
+audioFeedbackButton.addEventListener('click', function () { audioFeedback = !audioFeedback; this.innerText = audioFeedback ? "Speech Feedback ON" : "Speech Feedback OFF"; this.style.background = audioFeedback ? 'green' : 'red' })
 
 // handsfree.hideDebugger()
 handsfree.start()
