@@ -24,7 +24,8 @@ const rightWristIdx = 16
 const rightEyeIdx = 5;
 const mouthRightIdx = 10
 
-const activeZoneMarginX = 0.10
+let activeZoneMarginX = 0.10
+let activeZoneCalibrationOn = false
 
 const headXMargin = 0
 // const headHeight = 0.3
@@ -286,11 +287,11 @@ let drawActiveZone = (data) =>
 
 
     let activeRectWidth = canvas.width * activeZoneXThresh
-    let activeRextXPos = canvas.width * (1 - activeZoneXThresh)
+    let activeRectXPos = canvas.width * (1 - activeZoneXThresh)
 
     // context.fillStyle = 'rgba(225,0,0,0.5)';
     context.fillStyle = isActive(data) ? activeColor : inactiveColor;
-    context.fillRect(activeRextXPos, 0, activeRectWidth, canvas.height);
+    context.fillRect(activeRectXPos, 0, activeRectWidth, canvas.height);
 
 
     //draw head thing
@@ -375,14 +376,46 @@ handsfree.use('UIupdater', (data) =>
     // document.getElementById("active-indicator").textContent = "Is Active: " + isActive(data);
 
     // drawActiveZone(getActiveZoneXThresh(data));
-    drawActiveZone(data);
+
+
+    if (activeZoneCalibrationOn)
+    {
+        if (!data.pose.poseLandmarks) return null
+
+        // let rightHipX = data.pose.poseLandmarks[rightHipIdx].x
+        let rightShoulderX = data.pose.poseLandmarks[rightShoulderIdx].x
+        let rightHandX = data.pose.poseLandmarks[rightHandIdx].x
+
+        if (!rightShoulderX) return null
+
+        // let xBoundary = rightShoulderX - activeZoneMarginX
+
+        activeZoneMarginX = - rightHandX + rightShoulderX
+    }
     updateKnob(exprVal * 100);
 
+    drawActiveZone(data);
 
 
 
 })
 
+
+export function calibrateActiveZone()
+{
+    const countdown = document.getElementById("countdown");
+    const timeInterval = 1000;
+
+    activeZoneCalibrationOn = true;
+
+    setTimeout(() => { countdown.innerText = "3" }, timeInterval)
+    setTimeout(() => { countdown.innerText = "2" }, timeInterval * 2)
+    setTimeout(() => { countdown.innerText = "1" }, timeInterval * 3)
+    setTimeout(() => { countdown.innerText = ""; activeZoneCalibrationOn = false; }, timeInterval * 4)
+}
+
+const calibrateButton = document.getElementById("calibrate-button")
+calibrateButton.addEventListener('click', calibrateActiveZone)
 // handsfree.plugin.consoleLogger.enable()
 // handsfree.plugin.consoleLogger.disable()
 
