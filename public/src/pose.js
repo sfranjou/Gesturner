@@ -406,6 +406,8 @@ handsfree.use('UIupdater', (data) =>
         setActiveZonePosition(data);
     if (lowDeadZoneCalibrationOn)
         setLowDeadZonePosition(data);
+    if (highDeadZoneCalibrationOn)
+        setHighDeadZonePosition(data);
 
     updateKnob(isActive(data) ? exprVal * 100 : 0);
 
@@ -448,6 +450,16 @@ export function startCalibration()
     setTimeout(() => { countdown.innerText = "1" }, timeInterval * 7)
     setTimeout(() => { countdown.innerText = ""; lowDeadZoneCalibrationOn = false; }, timeInterval * 8)
 
+    setTimeout(() =>
+    {
+        highDeadZoneCalibrationOn = true;
+        calibrationIndicator.innerText = "Calibrating high dead zone";
+        countdown.innerText = "3";
+    }, timeInterval * 9)
+    setTimeout(() => { countdown.innerText = "2" }, timeInterval * 10)
+    setTimeout(() => { countdown.innerText = "1" }, timeInterval * 11)
+    setTimeout(() => { countdown.innerText = ""; highDeadZoneCalibrationOn = false; calibrationIndicator.innerText = "Calibrating done"; }, timeInterval * 12)
+
 
 }
 
@@ -470,6 +482,17 @@ function setLowDeadZonePosition(data)
     if (!rightHandY) return null
     // activeZoneMarginX = - rightHandX + rightShoulderX
     lowDeadZone = (1 - rightHandY);
+}
+
+function setHighDeadZonePosition(data)
+{
+    if (!data.pose.poseLandmarks) return null
+    // let rightHipX = data.pose.poseLandmarks[rightHipIdx].x
+    // let rightShoulderX = data.pose.poseLandmarks[rightShoulderIdx].x
+    let rightHandY = data.pose.poseLandmarks[rightHandIdx].y
+    if (!rightHandY) return null
+    // activeZoneMarginX = - rightHandX + rightShoulderX
+    highDeadZone = (1 - rightHandY);
 }
 
 const calibrateButton = document.getElementById("calibrate-button")
