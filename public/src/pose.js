@@ -403,9 +403,9 @@ handsfree.use('UIupdater', (data) =>
 
 
     if (activeZoneCalibrationOn)
-    {
         setActiveZonePosition(data);
-    }
+    if (lowDeadZoneCalibrationOn)
+        setLowDeadZonePosition(data);
 
     updateKnob(isActive(data) ? exprVal * 100 : 0);
 
@@ -420,15 +420,33 @@ export function startCalibration()
     const countdown = document.getElementById("countdown");
     const timeInterval = 1000;
 
+    const calibrationIndicator = document.getElementById("calibration-indicator")
     //calibrate active zone X position
     activeZoneCalibrationOn = true;
+
+    calibrationIndicator.innerText = "Calibrating Active Zone";
 
     setTimeout(() => { countdown.innerText = "3" }, timeInterval)
     setTimeout(() => { countdown.innerText = "2" }, timeInterval * 2)
     setTimeout(() => { countdown.innerText = "1" }, timeInterval * 3)
-    setTimeout(() => { countdown.innerText = ""; activeZoneCalibrationOn = false; }, timeInterval * 4)
+    setTimeout(() =>
+    {
+        countdown.innerText = "";
+        activeZoneCalibrationOn = false;
+    }, timeInterval * 4)
 
-    // lowDeadZoneCalibrationOn = true;
+
+
+
+    setTimeout(() =>
+    {
+        lowDeadZoneCalibrationOn = true;
+        calibrationIndicator.innerText = "Calibrating Low dead zone";
+        countdown.innerText = "3";
+    }, timeInterval * 5)
+    setTimeout(() => { countdown.innerText = "2" }, timeInterval * 6)
+    setTimeout(() => { countdown.innerText = "1" }, timeInterval * 7)
+    setTimeout(() => { countdown.innerText = ""; lowDeadZoneCalibrationOn = false; }, timeInterval * 8)
 
 
 }
@@ -441,6 +459,17 @@ function setActiveZonePosition(data)
     let rightHandX = data.pose.poseLandmarks[rightHandIdx].x
     if (!rightShoulderX) return null
     activeZoneMarginX = - rightHandX + rightShoulderX
+}
+
+function setLowDeadZonePosition(data)
+{
+    if (!data.pose.poseLandmarks) return null
+    // let rightHipX = data.pose.poseLandmarks[rightHipIdx].x
+    // let rightShoulderX = data.pose.poseLandmarks[rightShoulderIdx].x
+    let rightHandY = data.pose.poseLandmarks[rightHandIdx].y
+    if (!rightHandY) return null
+    // activeZoneMarginX = - rightHandX + rightShoulderX
+    lowDeadZone = (1 - rightHandY);
 }
 
 const calibrateButton = document.getElementById("calibrate-button")
