@@ -9,11 +9,11 @@ export function postMessage(message)
 {
     let alert = document.createElement('div');
     alert.className = "alert alert-primary"; // bootstrap styling
-    alert.style = "transition: opacity 1s";
+    alert.style = "transition: opacity 0.5s";
     alert.textContent = message;
 
-    alert.addEventListener('click', () => alert.style.opacity = '0'); //start fasding out after being loaded
-    // alert.addEventListener('click', () => alert.remove()); //start fasding out after being loaded
+    // alert.addEventListener('click', () => alert.style.opacity = '0'); //start fasding out after being loaded
+    alert.addEventListener('click', () => alert.remove()); //start fasding out after being loaded
     alert.addEventListener('transitionend', () => { alert.remove(); console.log("removed") });
 
 
@@ -21,5 +21,5 @@ export function postMessage(message)
     const holder = document.getElementById('messageHolder');
     holder.appendChild(alert);
     // alert.style.opacity = '0'
-    setTimeout(() => { alert.style.opacity = 0 }, 1000)
+    setTimeout(() => { alert.style.opacity = 0 }, 500)
 }

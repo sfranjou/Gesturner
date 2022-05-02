@@ -32,8 +32,8 @@ const headBoxHeightScaling = 3; // height of head bounds compared to eye-mouth d
 const headBoxYOffset = 1; //offset in terms of eye-mouth distance
 
 
-const activeColor = 'rgba(0,225,0,0.5)';
-const inactiveColor = 'rgba(225,0,0,0.5)';
+export const activeColor = 'rgba(0,225,0,0.5)';
+export const inactiveColor = 'rgba(225,0,0,0.5)';
 
 const swipeBoundsColor = 'rgba(0,0,225,0.5)';
 

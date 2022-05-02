@@ -21,6 +21,8 @@
 
 "use strict";
 
+import { activeColor, inactiveColor } from "./pose.js";
+
 (function (root, factory)
 {
 
@@ -1288,7 +1290,8 @@ let expressionKnob;
 function createKnob()
 {
 	// Create knob element, 300 x 300 px in size.
-	const knob = pureknob.createKnob(300, 300);
+	const knobSize = 300;
+	const knob = pureknob.createKnob(knobSize, knobSize);
 
 	// Set properties.
 	knob.setProperty('angleStart', -0.75 * Math.PI);
@@ -1330,6 +1333,12 @@ function createKnob()
 
 export function updateKnob(value) 
 {
+
+	if (value > 0)
+		expressionKnob.setProperty('colorFG', activeColor);
+	else
+		expressionKnob.setProperty('colorFG', inactiveColor);
+
 	expressionKnob.setValue(value)
 }
 
