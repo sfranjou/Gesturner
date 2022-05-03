@@ -37,9 +37,10 @@ let audioFeedback = true
 
 const headXMargin = 0
 // const headHeight = 0.3
-const headBoxHeightScaling = 3; // height of head bounds compared to eye-mouth distance
+let headBoxHeightScaling = 3; // height of head bounds compared to eye-mouth distance
 const headBoxYOffset = 1; //offset in terms of eye-mouth distance
 
+let headBoxCalibrationOn = false;
 
 export const activeColor = 'rgba(0,225,0,0.5)';
 export const inactiveColor = 'rgba(225,0,0,0.5)';
@@ -346,10 +347,10 @@ handsfree.use('consoleLogger', (data) =>
         // var flashMessages = document.getElementsByClassName('js-flash-message');
         // //show first flash message avilable in your page
         // showFlashMessage(flashMessages[0]);
-        if (gesture === " swipeRight")
-        {
+        // if (gesture === " swipeRight")
+        // {
 
-        }
+        // }
 
         // console.log(gesture);
         // postMessage(gesture);
@@ -367,7 +368,7 @@ handsfree.use('consoleLogger', (data) =>
             'Content-Type': 'application/json',
             'Accept': 'application/json, text/plain, */*',
         },
-        body: JSON.stringify({ active: isActive(data), pose: data.pose.poseLandmarks, swipe: gesture, expr: exprVal })
+        body: JSON.stringify({ active: isActive(data), pose: data.pose.poseLandmarks, swipe: gesture, expr: exprVal, dist: distorsionOn })
         // body: { name: "sebastian" }
     }).then(res =>
     {
@@ -419,6 +420,8 @@ handsfree.use('UIupdater', (data) =>
         setLowDeadZonePosition(data);
     if (highDeadZoneCalibrationOn)
         setHighDeadZonePosition(data);
+    if (headBoxCalibrationOn)
+        setHeadBoxSize(exprVal);
 
     updateKnob(isActive(data) ? exprVal * 100 : 0);
 
@@ -493,9 +496,37 @@ export function startCalibration()
     setTimeout(() => { countdown.innerText = "1" }, timeInterval * timeIdx++);
     setTimeout(() =>
     {
-        countdown.innerText = ""; highDeadZoneCalibrationOn = false; calibrationIndicator.innerText = "Calibrating complete";
-        window.speechSynthesis.speak(new SpeechSynthesisUtterance('Calibration complete'))
+        countdown.innerText = "";
+        highDeadZoneCalibrationOn = false;
+        // calibrationIndicator.innerText = "Calibrating complete";
+        // window.speechSynthesis.speak(new SpeechSynthesisUtterance('Calibration complete'))
     }, timeInterval * timeIdx++);
+
+
+    if (audioFeedback)
+    {
+        setTimeout(() => window.speechSynthesis.speak(new SpeechSynthesisUtterance('Swiping through the blue rectangle will toggle distorsion depending on swipe direction. Place your hand in the active zone and control the expresion parameter to set the size of the swipe zone.')), timeInterval * timeIdx++)
+        timeIdx += 10;
+    }
+
+    setTimeout(() =>
+    {
+        headBoxCalibrationOn = true;
+        calibrationIndicator.innerText = "Calibrating swipe zone";
+        countdown.innerText = "3";
+    }, timeInterval * timeIdx++);
+    setTimeout(() => { countdown.innerText = "2" }, timeInterval * timeIdx++);
+    setTimeout(() => { countdown.innerText = "1" }, timeInterval * timeIdx++);
+    setTimeout(() =>
+    {
+        countdown.innerText = ""; headBoxCalibrationOn = false; calibrationIndicator.innerText = "Calibrating complete";
+    }, timeInterval * timeIdx);
+    if (audioFeedback)
+        setTimeout(() => { window.speechSynthesis.speak(new SpeechSynthesisUtterance('Calibration complete')) }, timeInterval * timeIdx++);
+
+
+
+
 
 
 
@@ -531,6 +562,13 @@ function setHighDeadZonePosition(data)
     if (!rightHandY) return null
     // activeZoneMarginX = - rightHandX + rightShoulderX
     highDeadZone = (1 - rightHandY);
+}
+
+function setHeadBoxSize(exprVal)
+{
+    const minScale = 1;
+    const maxScale = 7;
+    headBoxHeightScaling = normalize(exprVal, 0, 1, minScale, maxScale);
 }
 
 const calibrateButton = document.getElementById("calibrate-button")
