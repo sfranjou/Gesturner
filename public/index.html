@@ -45,6 +45,15 @@
         align-items: center;
         margin: auto;
       }
+
+      .preset-container {
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
+        justify-content: center;
+        align-items: center;
+        margin: auto;
+      }
     </style>
     <meta charset="UTF-8" />
     <title>Gesturner</title>
@@ -65,22 +74,50 @@
 
   <h1 class="text-center display-1" style="margin: auto">Gesturner</h1>
   <div class="row">
-    <div class="column">
-      <div class="knob-container">
+    <div class="column" style="margin-left: 40px; flex: 0 0 20em">
+      <div class="knob-container border">
         <div id="knobDiv" class="knob"></div>
-        <h3 class="text-center">Pitch Shift</h3>
+        <div class="text-center h4">Pitch Shift</div>
+      </div>
+
+      <div class="preset-container">
+        <div class="h3 font-weight-normal text-secondary" id="distorsion-text">
+          Distorsion
+        </div>
+        <!-- <div><i class="bi bi-arrow-left-right"></i></div> -->
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="32"
+          height="32"
+          fill="currentColor"
+          class="bi bi-arrow-left-right"
+          viewBox="0 0 16 16"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5zm14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5z"
+          />
+        </svg>
+        <div class="h3 font-weight-bold text-success" id="clean-text">
+          Clean
+        </div>
       </div>
 
       <div class="button-container">
+        <div class="form-check form-switch">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="audio-feedback-button"
+            checked
+          />
+          <label class="form-check-label" for="audio-feedback-button"
+            >Spoken Feedback</label
+          >
+        </div>
+
         <button id="calibrate-button" type="button" class="btn btn-primary">
           Calibrate
-        </button>
-        <button
-          id="audio-feedback-button"
-          type="button"
-          class="btn btn-primary"
-        >
-          Audio Feedback
         </button>
       </div>
 
@@ -91,7 +128,7 @@
         ></div>
         <div
           id="countdown"
-          class="text-center font-weight-bolder h3"
+          class="text-center font-weight-bolder h2"
           style="color: red"
         ></div>
       </div>

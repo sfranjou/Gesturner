@@ -4,7 +4,7 @@
 // console.log("pose js: " + test)
 // const Handsfree = require("handsfree")
 import { updateKnob } from "./pureknob.js"
-import { postMessage } from "./swipeMessage.js"
+import { postMessage, updateDistorsionTextStatus } from "./swipeMessage.js"
 
 const leftHandIdx = 15
 const rightHandIdx = 16
@@ -45,6 +45,8 @@ export const activeColor = 'rgba(0,225,0,0.5)';
 export const inactiveColor = 'rgba(225,0,0,0.5)';
 
 const swipeBoundsColor = 'rgba(0,0,225,0.5)';
+
+let distorsionOn = false;
 
 //TODO: add timeout to prevent suprious swipe gestures
 class SwipeGesture
@@ -344,8 +346,14 @@ handsfree.use('consoleLogger', (data) =>
         // var flashMessages = document.getElementsByClassName('js-flash-message');
         // //show first flash message avilable in your page
         // showFlashMessage(flashMessages[0]);
-        console.log(gesture);
-        postMessage(gesture);
+        if (gesture === " swipeRight")
+        {
+
+        }
+
+        // console.log(gesture);
+        // postMessage(gesture);
+        updateDistorsionTextStatus(gesture);
     }
 
     let exprVal = normalize(1 - data.pose.poseLandmarks[rightHandIdx].y, lowDeadZone, highDeadZone);

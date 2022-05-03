@@ -23,7 +23,7 @@
 
 import { activeColor, inactiveColor } from "./pose.js";
 
-const knobSize = 200;
+const knobSize = 150;
 
 
 (function (root, factory)
