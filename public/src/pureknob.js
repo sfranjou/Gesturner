@@ -23,6 +23,9 @@
 
 import { activeColor, inactiveColor } from "./pose.js";
 
+const knobSize = 200;
+
+
 (function (root, factory)
 {
 
@@ -1290,7 +1293,6 @@ let expressionKnob;
 function createKnob()
 {
 	// Create knob element, 300 x 300 px in size.
-	const knobSize = 300;
 	const knob = pureknob.createKnob(knobSize, knobSize);
 
 	// Set properties.

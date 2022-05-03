@@ -348,6 +348,8 @@ handsfree.use('consoleLogger', (data) =>
         postMessage(gesture);
     }
 
+    let exprVal = normalize(1 - data.pose.poseLandmarks[rightHandIdx].y, lowDeadZone, highDeadZone);
+
 
     // https://stackoverflow.com/questions/6396101/pure-javascript-send-post-data-without-a-form
     // send data for the expression
@@ -357,7 +359,7 @@ handsfree.use('consoleLogger', (data) =>
             'Content-Type': 'application/json',
             'Accept': 'application/json, text/plain, */*',
         },
-        body: JSON.stringify({ active: isActive(data), pose: data.pose.poseLandmarks, swipe: gesture })
+        body: JSON.stringify({ active: isActive(data), pose: data.pose.poseLandmarks, swipe: gesture, expr: exprVal })
         // body: { name: "sebastian" }
     }).then(res =>
     {
@@ -397,7 +399,7 @@ handsfree.use('UIupdater', (data) =>
 
     // let exprVal = normalize(1 - data.pose.poseLandmarks[rightHandIdx].y, 0.2, 0.8);
     let exprVal = normalize(1 - data.pose.poseLandmarks[rightHandIdx].y, lowDeadZone, highDeadZone);
-    document.getElementById("expression-indicator").textContent = "Expression: " + exprVal;
+    // document.getElementById("expression-indicator").textContent = "Expression: " + exprVal;
     // document.getElementById("active-indicator").textContent = "Is Active: " + isActive(data);
 
     // drawActiveZone(getActiveZoneXThresh(data));

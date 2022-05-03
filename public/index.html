@@ -13,6 +13,38 @@
         /* height: 50%; */
         margin-right: 400px;
       }
+
+      .row {
+        display: flex;
+        flex-direction: row;
+        /* gap: 20px; */
+      }
+
+      .column {
+        /* flex: 50%; */
+
+        display: flex;
+        flex-direction: column;
+
+        margin: 10px;
+        gap: 10px;
+      }
+
+      .knob-container {
+        display: flex;
+        flex-direction: column;
+
+        justify-content: center;
+        align-items: center;
+      }
+
+      .button-container {
+        /* flex-direction: column; */
+        /* flex: 20%; */
+        justify-content: center;
+        align-items: center;
+        margin: auto;
+      }
     </style>
     <meta charset="UTF-8" />
     <title>Gesturner</title>
@@ -28,32 +60,49 @@
   </head>
 </html>
 <body>
-  <h1>Gesturner</h1>
-  <!-- <p>udpo test script</p>
-  <script src="src/oscbridge.js"></script> -->
   <script type="module" src="src/pose.js"></script>
   <script type="module" src="src/speechRec.js"></script>
-  <!-- <h3 id="right-hand-x">Right Hand x: NA</h3> -->
-  <!-- <h3 id="right-hand-y">Right Hand y: NA</h3> -->
-  <h3 id="expression-indicator">Expression value: NA</h3>
-  <button id="calibrate-button">Calibrate</button>
-  <!-- <button id="audio-feedback-button">Speech feedback</button> -->
-  <button id="audio-feedback-button" type="button" class="btn btn-primary">
-    <!-- <i class="bi bi-volume-mute"></i> -->
-    Audio Feedback
-  </button>
 
-  <div id="calibration-indicator"></div>
-  <div id="countdown"></div>
-  <div id="knobDiv"></div>
+  <h1 class="text-center display-1" style="margin: auto">Gesturner</h1>
+  <div class="row">
+    <div class="column">
+      <div class="knob-container">
+        <div id="knobDiv" class="knob"></div>
+        <h3 class="text-center">Pitch Shift</h3>
+      </div>
 
-  <!-- <h2 id="right-hand-y-norm">Right Hand y norm: NA</h2> -->
-  <!-- <h3 id="active-indicator">Active? No</h3> -->
-  <!-- <h3 class="js-flash-message">test</h3> -->
+      <div class="button-container">
+        <button id="calibrate-button" type="button" class="btn btn-primary">
+          Calibrate
+        </button>
+        <button
+          id="audio-feedback-button"
+          type="button"
+          class="btn btn-primary"
+        >
+          Audio Feedback
+        </button>
+      </div>
 
-  <div id="debugger-holder" class="debug" style="position: absolute"></div>
-  <canvas id="debugger-canvas" style="position: absolute"></canvas>
-  <div id="messageHolder"></div>
+      <div class="calibration-container">
+        <div
+          id="calibration-indicator"
+          class="text-center font-weight-bolder h4"
+        ></div>
+        <div
+          id="countdown"
+          class="text-center font-weight-bolder h3"
+          style="color: red"
+        ></div>
+      </div>
+    </div>
+
+    <div class="column">
+      <div id="debugger-holder" class="debug" style="position: absolute"></div>
+      <canvas id="debugger-canvas" style="position: absolute"></canvas>
+      <div id="messageHolder"></div>
+    </div>
+  </div>
 
   <script
     src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
