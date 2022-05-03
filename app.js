@@ -9,8 +9,9 @@ const port = 3000
 var host = "127.0.0.1"
 // var dgram = require('dgram');
 // var client = dgram.createSocket('udp4');
-const leftHandIdx = 15
-const rightHandIdx = 16
+// const leftHandIdx = 15
+// const rightHandIdx = 16
+// const rightHandIdx = 19
 
 //for normalizing
 const yMax = 0.7
@@ -53,16 +54,19 @@ app.post("/sendosc", (req, res) =>
 {
     // console.log("sendosc api endpoint called, got data")
 
-    if (!req.body.pose[rightHandIdx].y)
-        if (!req.body.pose[rightHandIdx].y)
-        {
-            console.log("no right hand")
-            return
-        }
+    // if (!req.body.pose[rightHandIdx].y)
+    //     if (!req.body.pose[rightHandIdx].y)
+    //     {
+    //         console.log("no right hand")
+    //         return
+    //     }
 
-    let val = req.body.pose[rightHandIdx].y
+    // let val = req.body.pose[rightHandIdx].y
 
-    val = normalize(1 - val, 0.2, 0.8)
+    // val = normalize(1 - val, 0.2, 0.8)
+
+    let val = req.body.exprVal;
+    // console.log(val);
 
 
     if (!req.body.active) 
@@ -77,7 +81,7 @@ app.post("/sendosc", (req, res) =>
     let gestureVal = 0;
     if (req.body.swipe)
     {
-        console.log(req.body.swipe)
+        // console.log(req.body.swipe)
         if (req.body.swipe === "swipeRight")
         {
             gestureVal = 1;

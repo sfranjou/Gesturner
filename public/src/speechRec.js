@@ -15,7 +15,7 @@ recognition.onspeechend = function ()
 {
     // when user is done speaking
     recognition.stop();
-    console.log("STOPPED")
+    // console.log("STOPPED")
     // recognition.start();
 }
 
@@ -23,7 +23,7 @@ recognition.onend = function ()
 {
     // when user is done speaking
     recognition.start();
-    console.log("RESTARTED")
+    // console.log("RESTARTED")
     // recognition.start();
 }
 
@@ -33,9 +33,26 @@ recognition.onresult = function (event)
     var transcript = event.results[0][0].transcript;
     var confidence = event.results[0][0].confidence;
     console.log(transcript, confidence)
-    if (transcript === "calibrate")
+
+    let muteButton = document.getElementById("audio-feedback-button");
+
+    // if they ask for help, turn on audio and start tutorial
+    if (transcript.includes("help"))
     {
-        setTimeout(startCalibration(), 1000);
+        muteButton.setAttribute("checked", "");
+        setTimeout(startCalibration(), 100);
+    }
+    else if (transcript.includes("turn on") || transcript.includes("unmute"))
+    {
+        muteButton.setAttribute("checked", "");
+    }
+    else if (transcript.includes("turn off") || transcript.includes("mute"))
+    {
+        muteButton.removeAttribute("checked");
+    }
+    else if (transcript.includes("calibrate") || transcript.includes("calibration"))
+    {
+        setTimeout(startCalibration(), 100);
     }
     // recognition.start();
 };

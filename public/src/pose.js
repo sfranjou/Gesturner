@@ -7,7 +7,8 @@ import { updateKnob } from "./pureknob.js"
 import { postMessage, updateDistorsionTextStatus } from "./swipeMessage.js"
 
 const leftHandIdx = 15
-const rightHandIdx = 16
+// const rightHandIdx = 16
+const rightHandIdx = 20
 
 const rightHipIdx = 24
 const leftHipIdx = 23
@@ -253,7 +254,7 @@ const handsfree = new Handsfree({
     upperBodyOnly: false,
 
     // Helps reduce jitter over multiple frames if true
-    smoothLandmarks: true,
+    // smoothLandmarks: true,
     setup: {
         wrap: {
             $parent: document.querySelector('#debugger-holder')
@@ -368,7 +369,7 @@ handsfree.use('consoleLogger', (data) =>
             'Content-Type': 'application/json',
             'Accept': 'application/json, text/plain, */*',
         },
-        body: JSON.stringify({ active: isActive(data), pose: data.pose.poseLandmarks, swipe: gesture, expr: exprVal, dist: distorsionOn })
+        body: JSON.stringify({ active: isActive(data), pose: data.pose.poseLandmarks, swipe: gesture, exprVal: exprVal, dist: distorsionOn })
         // body: { name: "sebastian" }
     }).then(res =>
     {
