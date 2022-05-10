@@ -1,0 +1,18 @@
+#N canvas 592 357 560 382 10;
+#X obj 177 60 pgmin;
+#X obj 177 147 route 1;
+#X obj 177 89 swap;
+#X obj 177 118 pack;
+#X obj 177 199 outlet;
+#X obj 177 173 select \$1;
+#X obj 237 146 inlet;
+#X obj 237 199 outlet;
+#X connect 0 0 2 0;
+#X connect 0 1 2 1;
+#X connect 1 0 5 0;
+#X connect 2 0 3 0;
+#X connect 2 1 3 1;
+#X connect 3 0 1 0;
+#X connect 5 0 4 0;
+#X connect 5 1 7 0;
+#X connect 6 0 5 1;

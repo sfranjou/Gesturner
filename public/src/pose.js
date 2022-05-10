@@ -1,13 +1,9 @@
 // Inside your app
-// import Handsfree from 'handsfree'
-// import { test } from '../shared.js'
-// console.log("pose js: " + test)
-// const Handsfree = require("handsfree")
+
 import { updateKnob } from "./pureknob.js"
 import { postMessage, updateDistorsionTextStatus } from "./swipeMessage.js"
 
 const leftHandIdx = 15
-// const rightHandIdx = 16
 const rightHandIdx = 20
 
 const rightHipIdx = 24
@@ -51,6 +47,7 @@ const swipeBoundsColor = 'rgba(0,0,225,0.5)';
 let distorsionOn = false;
 
 //TODO: add timeout to prevent suprious swipe gestures
+//THis class 
 class SwipeGesture
 {
     constructor()

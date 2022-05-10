@@ -1,0 +1,17 @@
+#N canvas 190 335 461 404 10;
+#X obj 307 19 ctlin;
+#X obj 311 66 pack f f f;
+#X msg 246 39 bang;
+#X obj 311 94 route 1;
+#X obj 313 127 route 15;
+#X obj 312 193 outlet;
+#X obj 312 161 / 127;
+#X connect 0 0 1 2;
+#X connect 0 0 2 0;
+#X connect 0 1 1 1;
+#X connect 0 2 1 0;
+#X connect 1 0 3 0;
+#X connect 2 0 1 0;
+#X connect 3 0 4 0;
+#X connect 4 0 6 0;
+#X connect 6 0 5 0;

@@ -1,0 +1,436 @@
+#N canvas 6 49 1247 691 10;
+#X obj 483 394 pitchshifter~;
+#X obj 378 507 abswitch~;
+#X msg 737 254 reset;
+#X obj 407 353 inlet~;
+#X obj 377 540 outlet~;
+#X obj 114 134 hsl 128 15 10 300 0 1 \$0-tempo \$0-tempo-set Tempo
+-2 -8 0 10 -262144 -1 -1 4369 1;
+#X floatatom 120 149 5 0 0 0 - - -;
+#X obj 111 184 hradio 15 1 1 4 \$0-tempo-mult \$0-tempo-mult-set Tempo_Multiplier
+0 -8 0 10 -262144 -1 -1 3;
+#X obj 949 138 r \$0-tempo-mult;
+#X obj 949 164 + 1;
+#X obj 931 221 *;
+#X obj 949 194 t b f;
+#X msg 931 250 tempo \$1;
+#X obj 931 117 r \$0-tempo;
+#X obj 986 221 s \$0-tempo-set;
+#X obj 336 300 tgl 15 1 \$0-bypass-toggle \$0-bypass-toggle-set Bypass
+17 7 0 10 -262144 -1 -1 0 1;
+#X obj 110 300 tgl 15 1 \$0-expression-toggle \$0-expression-toggle-set
+Expression 17 7 0 10 -262144 -1 -1 1 1;
+#X obj 154 359 expression;
+#X obj 154 384 spigot;
+#X obj 235 359 r \$0-expression-toggle;
+#X obj 691 280 t b f;
+#X obj 691 228 route 1;
+#X msg 691 254 0;
+#X obj 691 203 r \$0-bypass-toggle;
+#X obj -42 610 s \$0-bypass-toggle-set;
+#X msg -42 576 1;
+#X msg 4 574 0;
+#X obj 438 484 r \$0-bypass-toggle;
+#X obj 254 134 hsl 128 15 0 1 0 1 \$0-mix \$0-mix-set Mix -2 -8 0 10
+-262144 -1 -1 12700 1;
+#X floatatom 260 149 5 0 0 0 - - -;
+#X obj 339 151 bng 15 250 50 0 \$0-50-mix \$0-50-mix 50% 17 7 0 10
+-262144 -1 -1;
+#X obj 446 454 crossfader~;
+#X obj 520 423 r \$0-mix;
+#X obj 424 111 r \$0-50-mix;
+#X msg 424 139 0.5;
+#X obj 424 169 s \$0-mix-set;
+#X text 417 93 50% Mix Button;
+#X obj 251 184 hradio 15 1 1 8 \$0-steps \$0-steps-set Steps 0 -8 0
+10 -262144 -1 -1 1;
+#X obj 831 202 r \$0-steps;
+#X obj 831 224 + 1;
+#X msg 831 250 steps \$1;
+#X obj 889 344 route 0 1 2 3 4 5 6 7;
+#X msg 691 333 transpose 0;
+#X obj 110 212 vradio 15 1 1 5 \$0-step \$0-step0-set empty 0 -8 0
+10 -262144 -1 -1 4;
+#X obj 130 212 vradio 15 1 1 5 \$0-step \$0-step1-set empty 0 -8 0
+10 -262144 -1 -1 2;
+#X obj 150 212 vradio 15 1 1 5 \$0-step \$0-step2-set empty 0 -8 0
+10 -262144 -1 -1 4;
+#X obj 170 212 vradio 15 1 1 5 \$0-step \$0-step3-set empty 0 -8 0
+10 -262144 -1 -1 2;
+#X obj 190 212 vradio 15 1 1 5 \$0-step \$0-step4-set empty 0 -8 0
+10 -262144 -1 -1 4;
+#X obj 210 212 vradio 15 1 1 5 \$0-step \$0-step5-set empty 0 -8 0
+10 -262144 -1 -1 2;
+#X obj 230 212 vradio 15 1 1 5 \$0-step \$0-step6-set empty 0 -8 0
+10 -262144 -1 -1 4;
+#X obj 250 212 vradio 15 1 1 5 \$0-step \$0-step7-set empty 0 -8 0
+10 -262144 -1 -1 2;
+#X obj 889 507 s \$0-step0-set;
+#X obj 907 487 s \$0-step1-set;
+#X obj 496 201 r \$0-step;
+#X obj 925 467 s \$0-step2-set;
+#X obj 943 447 s \$0-step3-set;
+#X obj 961 427 s \$0-step4-set;
+#X obj 979 407 s \$0-step5-set;
+#X obj 997 387 s \$0-step6-set;
+#X obj 1015 367 s \$0-step7-set;
+#X obj 496 225 route 0 1 2 3 4;
+#X msg 496 326 transpose 12;
+#X msg 536 286 transpose 0;
+#X msg 577 246 transpose -12;
+#X obj 683 541 r \$1;
+#X obj 682 611 route expression;
+#X obj 884 611 route bypass;
+#X obj 682 640 s \$0-expression-toggle-set;
+#X obj 884 640 s \$0-bypass-toggle-set;
+#X obj 473 611 route mix;
+#X obj 473 640 s \$0-mix-set;
+#X obj 573 611 route tempo;
+#X obj 573 640 s \$0-tempo-set;
+#X obj 1052 595 route tempo-mult;
+#X obj 1052 641 s \$0-tempo-mult-set;
+#X obj 1052 619 - 1;
+#X obj 154 408 t b f;
+#X obj 119 440 pack f f;
+#X obj 45 544 s \$0-mix-set;
+#X obj 190 300 hradio 15 1 1 5 \$0-expression-type \$0-expression-type-set
+empty 0 -8 0 10 -262144 -1 -1 4;
+#X obj 218 389 r \$0-expression-type;
+#X obj 141 524 * 170;
+#X obj 141 551 + 50;
+#X obj 141 581 s \$0-tempo-set;
+#X obj 185 550 s \$0-steps-set;
+#X obj 185 524 * 7;
+#X obj 445 320 r~ \$1;
+#X obj 445 539 s~ \$1-out;
+#X obj 183 610 route steps;
+#X obj 183 659 s \$0-steps-set;
+#X obj 293 611 route expression-type;
+#X obj 183 637 - 1;
+#X obj 293 640 s \$0-expression-type-set;
+#N canvas 127 185 1064 555 patterns 0;
+#X obj 30 219 vradio 15 1 1 5 \$0-step0-set empty empty 0 -8 0 10 -262144
+-1 -1 4;
+#X obj 50 219 vradio 15 1 1 5 \$0-step1-set empty empty 0 -8 0 10 -262144
+-1 -1 2;
+#X obj 70 219 vradio 15 1 1 5 \$0-step2-set empty empty 0 -8 0 10 -262144
+-1 -1 0;
+#X obj 90 219 vradio 15 1 1 5 \$0-step3-set empty empty 0 -8 0 10 -262144
+-1 -1 2;
+#X obj 110 219 vradio 15 1 1 5 \$0-step4-set empty empty 0 -8 0 10
+-262144 -1 -1 0;
+#X obj 130 219 vradio 15 1 1 5 \$0-step5-set empty empty 0 -8 0 10
+-262144 -1 -1 2;
+#X obj 150 219 vradio 15 1 1 5 \$0-step6-set empty empty 0 -8 0 10
+-262144 -1 -1 2;
+#X obj 170 219 vradio 15 1 1 5 \$0-step7-set empty empty 0 -8 0 10
+-262144 -1 -1 2;
+#X msg 90 174 bang;
+#X obj 90 24 r \$1;
+#X obj 90 46 route pattern;
+#X obj 210 219 vradio 15 1 1 5 \$0-step0-set empty empty 0 -8 0 10
+-262144 -1 -1 4;
+#X obj 230 219 vradio 15 1 1 5 \$0-step1-set empty empty 0 -8 0 10
+-262144 -1 -1 2;
+#X obj 250 219 vradio 15 1 1 5 \$0-step2-set empty empty 0 -8 0 10
+-262144 -1 -1 0;
+#X obj 270 219 vradio 15 1 1 5 \$0-step3-set empty empty 0 -8 0 10
+-262144 -1 -1 2;
+#X obj 290 219 vradio 15 1 1 5 \$0-step4-set empty empty 0 -8 0 10
+-262144 -1 -1 4;
+#X obj 310 219 vradio 15 1 1 5 \$0-step5-set empty empty 0 -8 0 10
+-262144 -1 -1 2;
+#X obj 330 219 vradio 15 1 1 5 \$0-step6-set empty empty 0 -8 0 10
+-262144 -1 -1 0;
+#X obj 350 219 vradio 15 1 1 5 \$0-step7-set empty empty 0 -8 0 10
+-262144 -1 -1 2;
+#X msg 270 174 bang;
+#X obj 390 219 vradio 15 1 1 5 \$0-step0-set empty empty 0 -8 0 10
+-262144 -1 -1 0;
+#X obj 410 219 vradio 15 1 1 5 \$0-step1-set empty empty 0 -8 0 10
+-262144 -1 -1 2;
+#X obj 430 219 vradio 15 1 1 5 \$0-step2-set empty empty 0 -8 0 10
+-262144 -1 -1 0;
+#X obj 450 219 vradio 15 1 1 5 \$0-step3-set empty empty 0 -8 0 10
+-262144 -1 -1 2;
+#X obj 470 219 vradio 15 1 1 5 \$0-step4-set empty empty 0 -8 0 10
+-262144 -1 -1 0;
+#X obj 490 219 vradio 15 1 1 5 \$0-step5-set empty empty 0 -8 0 10
+-262144 -1 -1 2;
+#X obj 510 219 vradio 15 1 1 5 \$0-step6-set empty empty 0 -8 0 10
+-262144 -1 -1 0;
+#X obj 530 219 vradio 15 1 1 5 \$0-step7-set empty empty 0 -8 0 10
+-262144 -1 -1 2;
+#X msg 450 174 bang;
+#X obj 210 361 s \$0-steps-set;
+#X obj 14 140 r \$0-pattern-maps;
+#X obj 194 140 r \$0-pattern-spread;
+#X obj 434 140 r \$0-pattern-ups;
+#X msg 30 310 5;
+#X msg 210 310 7;
+#X msg 390 310 7;
+#X obj 790 219 vradio 15 1 1 5 \$0-step0-set empty empty 0 -8 0 10
+-262144 -1 -1 4;
+#X obj 810 219 vradio 15 1 1 5 \$0-step1-set empty empty 0 -8 0 10
+-262144 -1 -1 3;
+#X obj 830 219 vradio 15 1 1 5 \$0-step2-set empty empty 0 -8 0 10
+-262144 -1 -1 2;
+#X obj 850 219 vradio 15 1 1 5 \$0-step3-set empty empty 0 -8 0 10
+-262144 -1 -1 1;
+#X obj 870 219 vradio 15 1 1 5 \$0-step4-set empty empty 0 -8 0 10
+-262144 -1 -1 0;
+#X obj 890 219 vradio 15 1 1 5 \$0-step5-set empty empty 0 -8 0 10
+-262144 -1 -1 1;
+#X obj 910 219 vradio 15 1 1 5 \$0-step6-set empty empty 0 -8 0 10
+-262144 -1 -1 2;
+#X obj 930 219 vradio 15 1 1 5 \$0-step7-set empty empty 0 -8 0 10
+-262144 -1 -1 3;
+#X msg 850 174 bang;
+#X msg 790 310 7;
+#X obj 834 140 r \$0-pattern-arpeggio;
+#X obj 580 219 vradio 15 1 1 5 \$0-step0-set empty empty 0 -8 0 10
+-262144 -1 -1 4;
+#X obj 600 219 vradio 15 1 1 5 \$0-step1-set empty empty 0 -8 0 10
+-262144 -1 -1 2;
+#X obj 620 219 vradio 15 1 1 5 \$0-step2-set empty empty 0 -8 0 10
+-262144 -1 -1 4;
+#X obj 640 219 vradio 15 1 1 5 \$0-step3-set empty empty 0 -8 0 10
+-262144 -1 -1 2;
+#X obj 660 219 vradio 15 1 1 5 \$0-step4-set empty empty 0 -8 0 10
+-262144 -1 -1 4;
+#X obj 680 219 vradio 15 1 1 5 \$0-step5-set empty empty 0 -8 0 10
+-262144 -1 -1 2;
+#X obj 700 219 vradio 15 1 1 5 \$0-step6-set empty empty 0 -8 0 10
+-262144 -1 -1 4;
+#X obj 720 219 vradio 15 1 1 5 \$0-step7-set empty empty 0 -8 0 10
+-262144 -1 -1 2;
+#X msg 640 174 bang;
+#X msg 580 310 7;
+#X obj 624 140 r \$0-pattern-downs;
+#X obj 90 68 route maps spread ups downs arpeggio;
+#X connect 0 0 33 0;
+#X connect 8 0 0 0;
+#X connect 8 0 1 0;
+#X connect 8 0 2 0;
+#X connect 8 0 3 0;
+#X connect 8 0 4 0;
+#X connect 8 0 5 0;
+#X connect 8 0 6 0;
+#X connect 8 0 7 0;
+#X connect 9 0 10 0;
+#X connect 10 0 58 0;
+#X connect 11 0 34 0;
+#X connect 19 0 11 0;
+#X connect 19 0 12 0;
+#X connect 19 0 13 0;
+#X connect 19 0 14 0;
+#X connect 19 0 15 0;
+#X connect 19 0 16 0;
+#X connect 19 0 17 0;
+#X connect 19 0 18 0;
+#X connect 20 0 35 0;
+#X connect 28 0 20 0;
+#X connect 28 0 21 0;
+#X connect 28 0 22 0;
+#X connect 28 0 23 0;
+#X connect 28 0 24 0;
+#X connect 28 0 25 0;
+#X connect 28 0 26 0;
+#X connect 28 0 27 0;
+#X connect 30 0 8 0;
+#X connect 31 0 19 0;
+#X connect 32 0 28 0;
+#X connect 33 0 29 0;
+#X connect 34 0 29 0;
+#X connect 35 0 29 0;
+#X connect 36 0 45 0;
+#X connect 44 0 36 0;
+#X connect 44 0 37 0;
+#X connect 44 0 38 0;
+#X connect 44 0 39 0;
+#X connect 44 0 40 0;
+#X connect 44 0 41 0;
+#X connect 44 0 42 0;
+#X connect 44 0 43 0;
+#X connect 45 0 29 0;
+#X connect 46 0 44 0;
+#X connect 47 0 56 0;
+#X connect 55 0 47 0;
+#X connect 55 0 48 0;
+#X connect 55 0 49 0;
+#X connect 55 0 50 0;
+#X connect 55 0 51 0;
+#X connect 55 0 52 0;
+#X connect 55 0 53 0;
+#X connect 55 0 54 0;
+#X connect 57 0 55 0;
+#X connect 58 0 8 0;
+#X connect 58 1 19 0;
+#X connect 58 2 28 0;
+#X connect 58 3 55 0;
+#X connect 58 4 44 0;
+#X restore 677 97 pd patterns;
+#X msg 264 437 0;
+#X obj 218 412 t b f b;
+#X msg 218 437 1;
+#X obj 121 463 spigot;
+#X obj 285 212 bng 15 250 50 0 \$0-pattern-maps empty Maps 17 7 0 10
+-262144 -1 -1;
+#X obj 285 232 bng 15 250 50 0 \$0-pattern-spread empty Spread 17 7
+0 10 -262144 -1 -1;
+#X obj 285 252 bng 15 250 50 0 \$0-pattern-ups empty Ups 17 7 0 10
+-262144 -1 -1;
+#X msg 557 266 transpose -7;
+#X msg 516 306 transpose 7;
+#X obj 335 212 bng 15 250 50 0 \$0-pattern-arpeggio empty Arpeggio
+17 7 0 10 -262144 -1 -1;
+#X obj 119 484 route 3 1 0 2 4;
+#N canvas 425 257 488 454 expressiontap 0;
+#X obj 12 219 change;
+#X obj 12 242 select 1;
+#X obj 12 37 inlet;
+#X obj 12 294 s \$0-tempo-set;
+#X obj 348 62 moses 0.5;
+#X obj 316 91 select 0;
+#X msg 316 115 1;
+#X msg 369 115 0;
+#X obj 316 141 change;
+#X obj 331 204 s \$0-bypass-toggle-set;
+#X msg 408 87 0;
+#X obj 142 120 pipe 500;
+#X msg 142 141 1;
+#X obj 12 117 spigot;
+#X obj 250 262 print;
+#X msg 142 97 clear;
+#X msg 63 95 0;
+#X obj 63 74 moses 0.5;
+#X msg 125 191 1;
+#X msg 12 191 0;
+#X obj 12 144 moses 1;
+#X obj 65 168 moses 0.9;
+#X obj 12 268 taptempo;
+#X connect 0 0 1 0;
+#X connect 1 0 22 0;
+#X connect 2 0 4 0;
+#X connect 2 0 5 0;
+#X connect 2 0 13 0;
+#X connect 2 0 17 0;
+#X connect 4 1 10 0;
+#X connect 5 0 6 0;
+#X connect 5 1 7 0;
+#X connect 6 0 8 0;
+#X connect 7 0 8 0;
+#X connect 8 0 9 0;
+#X connect 11 0 12 0;
+#X connect 12 0 13 1;
+#X connect 13 0 20 0;
+#X connect 15 0 11 0;
+#X connect 16 0 13 1;
+#X connect 17 0 15 0;
+#X connect 17 0 16 0;
+#X connect 17 1 11 0;
+#X connect 18 0 0 0;
+#X connect 19 0 0 0;
+#X connect 20 0 21 0;
+#X connect 20 1 19 0;
+#X connect 21 1 18 0;
+#X connect 22 0 3 0;
+#X restore 233 513 pd expressiontap;
+#X obj -42 546 route 0;
+#X obj 737 296 stepper 500 6;
+#X obj 335 252 bng 15 250 50 0 \$0-pattern-downs empty Downs 17 7 0
+10 -262144 -1 -1;
+#X connect 0 0 31 1;
+#X connect 1 0 4 0;
+#X connect 1 0 87 0;
+#X connect 2 0 107 0;
+#X connect 3 0 0 0;
+#X connect 3 0 1 1;
+#X connect 3 0 31 0;
+#X connect 5 0 6 0;
+#X connect 8 0 9 0;
+#X connect 9 0 11 0;
+#X connect 10 0 12 0;
+#X connect 11 0 14 0;
+#X connect 11 1 10 1;
+#X connect 12 0 107 0;
+#X connect 13 0 10 0;
+#X connect 17 0 18 0;
+#X connect 18 0 76 0;
+#X connect 19 0 18 1;
+#X connect 20 0 42 0;
+#X connect 20 1 107 0;
+#X connect 21 0 22 0;
+#X connect 21 1 2 0;
+#X connect 22 0 20 0;
+#X connect 23 0 21 0;
+#X connect 25 0 24 0;
+#X connect 26 0 24 0;
+#X connect 27 0 1 2;
+#X connect 28 0 29 0;
+#X connect 31 0 1 0;
+#X connect 32 0 31 2;
+#X connect 33 0 34 0;
+#X connect 34 0 35 0;
+#X connect 38 0 39 0;
+#X connect 39 0 40 0;
+#X connect 40 0 107 0;
+#X connect 41 0 51 0;
+#X connect 41 1 52 0;
+#X connect 41 2 54 0;
+#X connect 41 3 55 0;
+#X connect 41 4 56 0;
+#X connect 41 5 57 0;
+#X connect 41 6 58 0;
+#X connect 41 7 59 0;
+#X connect 42 0 0 1;
+#X connect 53 0 60 0;
+#X connect 60 0 61 0;
+#X connect 60 1 102 0;
+#X connect 60 2 62 0;
+#X connect 60 3 101 0;
+#X connect 60 4 63 0;
+#X connect 61 0 0 1;
+#X connect 62 0 0 1;
+#X connect 63 0 0 1;
+#X connect 64 0 65 0;
+#X connect 64 0 66 0;
+#X connect 64 0 69 0;
+#X connect 64 0 71 0;
+#X connect 64 0 73 0;
+#X connect 64 0 90 0;
+#X connect 64 0 88 0;
+#X connect 65 0 67 0;
+#X connect 66 0 68 0;
+#X connect 69 0 70 0;
+#X connect 71 0 72 0;
+#X connect 73 0 75 0;
+#X connect 75 0 74 0;
+#X connect 76 0 77 0;
+#X connect 76 1 77 1;
+#X connect 77 0 97 0;
+#X connect 80 0 95 0;
+#X connect 81 0 82 0;
+#X connect 82 0 83 0;
+#X connect 85 0 84 0;
+#X connect 86 0 0 0;
+#X connect 88 0 91 0;
+#X connect 90 0 92 0;
+#X connect 91 0 89 0;
+#X connect 94 0 97 1;
+#X connect 95 0 96 0;
+#X connect 95 1 77 0;
+#X connect 95 2 94 0;
+#X connect 96 0 97 1;
+#X connect 97 0 104 0;
+#X connect 101 0 0 1;
+#X connect 102 0 0 1;
+#X connect 104 0 106 0;
+#X connect 104 1 78 0;
+#X connect 104 2 81 0;
+#X connect 104 3 85 0;
+#X connect 104 4 105 0;
+#X connect 106 0 25 0;
+#X connect 106 1 26 0;
+#X connect 107 0 41 0;
+#X coords 0 -1 1 1 300 220 1 100 100;

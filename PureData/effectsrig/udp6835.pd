@@ -1,0 +1,11 @@
+#N canvas 167 191 450 300 12;
+#X obj 213 222 outlet;
+#X obj 86 104 oscparse;
+#X obj 73 175 print udp;
+#X obj 81 43 netreceive -u -b 3005 127.0.0.1;
+#X obj 218 142 unpack s f;
+#X obj 343 137 route y;
+#X obj 303 94 list trim;
+#X connect 1 0 0 0;
+#X connect 3 0 1 0;
+#X connect 6 0 5 0;

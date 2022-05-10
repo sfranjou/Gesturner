@@ -1,0 +1,196 @@
+#N canvas -1593 76 1368 690 10;
+#X obj -51 167 adc~;
+#X obj 1064 442 dac~;
+#X obj -25 201 whammy~ pitch1;
+#X obj 833 193 r~ shim1-out;
+#X obj 1000 221 leslie~ les1;
+#X obj 833 232 octfuzz~ fuzz1;
+#X obj 1001 179 r~ fuzz1-out;
+#X obj 508 195 shimmer~ shim1;
+#X obj 750 -75 presethandler;
+#N canvas 133 403 1440 776 presets 0;
+#X obj 238 54 preset 3;
+#X obj 18 54 preset 1;
+#X msg 18 81 \; title Song 1 \; default bang \; starfield_shimmer bang
+\;;
+#X msg 238 81 \; title Song 2 \; default bang \; whammy_solo bang \;
+;
+#X connect 0 0 3 0;
+#X connect 1 0 2 0;
+#X restore 254 6 pd presets;
+#X obj 173 197 muse~ muse1;
+#N canvas 78 181 1247 690 quicksets 0;
+#X obj 39 -38 loadbang;
+#X obj 72 -18 r default;
+#X msg 680 -21 \; pitch1 transpose 1 \; pitch1 mix 0.5 \; pitch1 bypass
+0 \; pitch1 direction -1 \; pitch1 range 12 \; pitch1 expression 0
+\;;
+#X msg 300 -22 \; les1 expression 0 \; pitch1 transpose 0 \; pitch1
+mix 1 \; pitch1 expression 1 \; pitch1 bypass 0 \; pitch1 direction
+1 \; pitch1 range 12 \; shim1 expression 0 \;;
+#X msg 479 -22 \; les1 expression 0 \; pitch1 transpose 0 \; pitch1
+mix 0.5 \; pitch1 expression 1 \; pitch1 bypass 0 \; pitch1 direction
+1 \; pitch1 range 12 \; shim1 expression 0 \;;
+#X msg 480 389 \; les1 depth 0.75 \; les1 modulation 0 \;;
+#X text 318 373 Modulation Only;
+#X text 488 373 Tremolo Only;
+#X msg 300 389 \; les1 depth 0 \; les1 modulation 0.3 \;;
+#X obj 479 -44 r whammy_half_solo;
+#X obj 300 -46 r whammy_solo;
+#X obj 680 -42 r fat_bass;
+#X obj 300 114 r expression_leslie;
+#X obj 480 114 r expression_whammy;
+#X obj 660 114 r expression_shimmer;
+#X msg 860 -20 \; pitch1 transpose 1 \; pitch1 mix 0.5 \; pitch1 bypass
+0 \; pitch1 direction 1 \; pitch1 range 12 \; pitch1 expression 0 \;
+;
+#X obj 860 -43 r high_50;
+#X obj 859 104 r descender;
+#X obj 859 438 r starfield_shimmer;
+#X msg 859 459 \; shim1 feedback 0.37 \; shim1 transpose 12 \; shim1
+delay 0 \; shim1 expression-range 1 \; shim1 bypass 0 \; shim1 expression-feedback
+0 \; shim1 expression-transpose 0 \; shim1 expression-mix 1;
+#X msg 859 129 \; les1 rate 1 \; les1 depth 0.75 \; les1 modulation
+0 \; les1 expression 1 \; les1 bypass 1 \; pitch1 transpose 0 \; pitch1
+mix 1 \; pitch1 expression 1 \; pitch1 bypass 0 \; pitch1 direction
+1 \; pitch1 range 12 \; shim1 feedback 0.6 \; shim1 transpose 12 \;
+shim1 delay 0 \; shim1 mix 0 \; shim1 expression 1 \; shim1 bypass
+0 \; shim1 expression-feedback 0 \; shim1 expression-transpose 0 \;
+shim1 expression-mix 1 \; shim1 expression-range 0 \; fuzz1 bypass
+1 \;;
+#X msg 660 389 \; les1 expression 0 \; shim1 expression 0 \; pitch1
+expression 0 \; fuzz1 expression 0 \; muse1 expression 0 \;;
+#X msg 660 139 \; les1 expression 0 \; shim1 expression 1 \; pitch1
+expression 0 \; fuzz1 expression 0 \; muse1 expression 0 \;;
+#X msg 480 139 \; les1 expression 0 \; shim1 expression 0 \; pitch1
+expression 1 \; fuzz1 expression 0 \; muse1 expression 0 \;;
+#X msg 300 139 \; les1 expression 1 \; shim1 expression 0 \; pitch1
+expression 0 \; fuzz1 expression 0 \; muse1 expression 0 \;;
+#X obj 660 363 r expression_none;
+#X obj 300 234 r expression_muse;
+#X msg 300 259 \; les1 expression 0 \; shim1 expression 0 \; pitch1
+expression 0 \; fuzz1 expression 0 \; muse1 expression 1 \;;
+#X msg 72 7 \; les1 rate 4 \; les1 depth 0.5 \; les1 modulation 0.3
+\; les1 expression 1 \; les1 bypass 1 \; pitch1 transpose 1 \; pitch1
+mix 0.5 \; pitch1 expression 0 \; pitch1 bypass 1 \; pitch1 direction
+-1 \; pitch1 range 12 \; pitch1 expression-mix 0 \; pitch1 expression-mix-50
+0 \; shim1 feedback 0.6 \; shim1 transpose 12 \; shim1 delay 0 \; shim1
+mix 0.5 \; shim1 expression 0 \; shim1 expression-range 0 \; shim1
+bypass 1 \; shim1 expression-feedback 0 \; shim1 expression-transpose
+0 \; shim1 expression-mix 1 \; fuzz1 mix 1 \; fuzz1 expression 0 \;
+fuzz1 bypass 1 \; muse1 expression-type 4 \; muse1 expression 0 \;
+muse1 tempo 120 \; muse1 tempo-mult 4 \; muse1 steps 6 \; muse1 mix
+1 \; muse1 bypass 1 \; muse1 pattern maps \;;
+#X connect 0 0 28 0;
+#X connect 1 0 28 0;
+#X connect 9 0 4 0;
+#X connect 10 0 3 0;
+#X connect 11 0 2 0;
+#X connect 12 0 24 0;
+#X connect 13 0 23 0;
+#X connect 14 0 22 0;
+#X connect 16 0 15 0;
+#X connect 17 0 20 0;
+#X connect 18 0 19 0;
+#X connect 25 0 21 0;
+#X connect 26 0 27 0;
+#X coords 0 0 1 1 400 400 0;
+#X restore 254 -24 pd quicksets;
+#X obj 173 172 r~ pitch1-out;
+#X obj 508 166 r~ muse1-out;
+#N canvas 5 49 1247 690 qbuttons 0;
+#X obj 112 126 bng 40 250 50 0 default empty default 17 7 0 18 #fcfcfc
+#000000 #000000;
+#X obj 112 180 bng 20 250 50 0 whammy_solo empty whammy_solo 17 7 0
+12 #fcfcfc #000000 #000000;
+#X obj 112 203 bng 20 250 50 0 whammy_half_solo empty whammy_half_solo
+17 7 0 12 #fcfcfc #000000 #000000;
+#X obj 112 226 bng 20 250 50 0 fat_bass empty fat_bass 17 7 0 12 #fcfcfc
+#000000 #000000;
+#X obj 112 249 bng 20 250 50 0 high_50 empty high_50 17 7 0 12 #fcfcfc
+#000000 #000000;
+#X obj 252 180 bng 20 250 50 0 expression_leslie empty leslie 17 7
+0 12 #fcfcfc #000000 #000000;
+#X obj 252 203 bng 20 250 50 0 expression_whammy empty whammy 17 7
+0 12 #fcfcfc #000000 #000000;
+#X obj 252 226 bng 20 250 50 0 expression_shimmer empty shimmer 17
+7 0 12 #fcfcfc #000000 #000000;
+#X obj 252 272 bng 20 250 50 0 expression_none empty none 17 7 0 12
+#fcfcfc #000000 #000000;
+#X obj 112 299 bng 20 250 50 0 starfield_shimmer empty starfield_shimmer
+17 7 0 12 #fcfcfc #000000 #000000;
+#X obj 112 326 bng 20 250 50 0 descender empty descender 17 7 0 12
+#fcfcfc #000000 #000000;
+#X text 249 163 Expression;
+#X obj 252 249 bng 20 250 50 0 expression_muse empty muse 17 7 0 12
+#fcfcfc #000000 #000000;
+#X coords 0 -1 1 1 225 250 1 100 100;
+#X restore 19 -94 pd qbuttons;
+#N canvas 40 216 580 394 auto-leslie 0;
+#X obj 111 197 snapshot~;
+#X obj 111 317 s les1;
+#X msg 111 292 rate \$1;
+#X obj 111 247 * 2;
+#X obj 111 224 + 1;
+#X obj 111 269 + 1;
+#X obj 227 169 metro 10;
+#X obj 111 169 osc~ 0.3;
+#X obj 227 139 tgl 15 1 empty empty empty 17 7 0 10 #fcfcfc #000000
+#000000 0 1;
+#X obj 114 119 hsl 128 15 0.1 1 0 1 empty empty empty -2 -8 0 10 #fcfcfc
+#000000 #000000 4400 1;
+#X floatatom 111 134 5 0 0 0 - - - 0;
+#X obj 227 39 r autoles;
+#X obj 227 78 route bypass;
+#X obj 111 78 route rate;
+#X connect 0 0 4 0;
+#X connect 2 0 1 0;
+#X connect 3 0 5 0;
+#X connect 4 0 3 0;
+#X connect 5 0 2 0;
+#X connect 6 0 0 0;
+#X connect 7 0 0 0;
+#X connect 8 0 6 0;
+#X connect 9 0 10 0;
+#X connect 10 0 7 0;
+#X connect 11 0 12 0;
+#X connect 11 0 13 0;
+#X connect 12 0 8 0;
+#X connect 13 0 9 0;
+#X coords 0 -1 1 1 150 60 1 100 100;
+#X restore 254 -94 pd auto-leslie;
+#X msg 313 72 \; pitch1 transpose 0.5;
+#X obj 658 -5 udp6835;
+#X msg 845 48 \; fuzz1 bypass \$1;
+#X msg 659 129 \; fuzz1 bypass 0;
+#X msg 542 129 \; fuzz1 bypass 1;
+#X obj 491 95 bang;
+#X obj 635 102 bang, f 8;
+#X msg 501 -33 swipe 1;
+#X msg 585 -42 swipe 0;
+#X msg 595 -32 swipe -1, f 15;
+#X obj 657 20 list trim;
+#X obj 738 71 print udp;
+#X obj 620 48 route swipe y;
+#X obj 798 120 s udpy;
+#X obj 546 78 select 1 0 -1;
+#X connect 0 0 2 0;
+#X connect 0 1 2 0;
+#X connect 3 0 5 0;
+#X connect 4 0 1 0;
+#X connect 4 1 1 1;
+#X connect 6 0 4 0;
+#X connect 12 0 10 0;
+#X connect 13 0 7 0;
+#X connect 17 0 26 0;
+#X connect 21 0 20 0;
+#X connect 22 0 19 0;
+#X connect 23 0 28 0;
+#X connect 24 0 28 0;
+#X connect 25 0 28 0;
+#X connect 26 0 28 0;
+#X connect 28 0 30 0;
+#X connect 28 1 29 0;
+#X connect 28 1 27 0;
+#X connect 30 0 21 0;
+#X connect 30 2 22 0;
