@@ -16,8 +16,6 @@ recognition.onspeechend = function ()
 {
     // when user is done speaking
     recognition.stop();
-    // console.log("STOPPED")
-    // recognition.start();
 }
 
 recognition.onend = function ()
@@ -25,8 +23,6 @@ recognition.onend = function ()
     // when user is done speaking
     if (listening)
         recognition.start();
-    // console.log("RESTARTED")
-    // recognition.start();
 }
 
 // This runs when the speech recognition service returns result
@@ -48,10 +44,7 @@ recognition.onresult = function (event)
     {
         muteButton.click();
     }
-    // else if (transcript.includes("turn off") || transcript.includes("mute"))
-    // {
-    //     muteButton.removeAttribute("checked");
-    // }
+
     else if (transcript.includes("calibrate") || transcript.includes("Start calibration") || transcript.includes("Start calibration"))
     {
         setTimeout(startCalibration(), 100);
@@ -61,7 +54,6 @@ recognition.onresult = function (event)
         let listeningButton = document.getElementById("listening-button");
         listeningButton.click();
     }
-    // recognition.start();
 };
 
 

@@ -47,7 +47,7 @@ const swipeBoundsColor = 'rgba(0,0,225,0.5)';
 let distorsionOn = false;
 
 //TODO: add timeout to prevent suprious swipe gestures
-//THis class 
+//This class provides a clean interface for detecting swipe gestures. Updating an instance with the data from the handsfree will return the swipe gesture when it is detected.
 class SwipeGesture
 {
     constructor()
@@ -80,14 +80,12 @@ class SwipeGesture
 
         let bottomBoundary = headBounds.y + headBounds.height;
         let topBoundary = headBounds.y;
-        // console.log(rightHand.y)
 
         if (rightHand.y < topBoundary || rightHand.y > bottomBoundary)
         {
             this.swiping = null;
             this.swipeStartSide = null;
             this.previousPos = rightHand;
-            // console.log("out of bounds y");
             return null
         }
 
@@ -96,7 +94,6 @@ class SwipeGesture
             this.swiping = null;
             this.swipeStartSide = null;
             this.previousPos = rightHand;
-            // console.log("out of bounds x");
             return null
         }
 
@@ -108,13 +105,11 @@ class SwipeGesture
         {
             this.swiping = true
             this.swipeStartSide = 'right'
-            // console.log("enter on right")
         }
         else if (!this.swiping && this.previousPos.x > leftBoundary && (leftBoundary >= rightHand.x >= rightBoundary))
         {
             this.swiping = true
             this.swipeStartSide = 'left'
-            // console.log("enter on left")
         }
 
         // now handle the exiting the thing case
@@ -123,7 +118,6 @@ class SwipeGesture
         {
             this.swiping = null;
             this.swipeStartSide = null;
-            // console.log("not swiping")
         }
         //here this.swiping is true: we have entered. Just check the exit side
         else if (this.swipeStartSide = 'left' && rightHand.x < rightBoundary)
@@ -145,11 +139,7 @@ class SwipeGesture
         else 
         {
             // we exited the same side we arrive on
-            // console.log(this.swiping, this.swipeStartSide, this.previousPos)
-            // this.swiping = null;
-            // this.swipeStartSide = null;
             this.previousPos = rightHand
-            // console.log("youp")
         }
 
 
@@ -185,19 +175,7 @@ let getHeadBounds = (data) =>
 
     if (!rightEar || !leftEar)
         return null
-    //TODO: add x margin
 
-    // let topLeft = { x: leftEar.x, y: leftEar.y - headHeight / 2 }
-    // let topRight = { x: rightEar.x, y: rightEar.y - headHeight / 2 }
-    // let bottomLeft = { x: leftEar.x, y: leftEar.y + headHeight / 2 }
-    // let bottomRight = { x: rightEar.x, y: rightEar.y + headHeight / 2 }
-
-    // let bounds = {
-    //     topLeft: topLeft,
-    //     topRight: topRight,
-    //     bottomLeft: bottomLeft,
-    //     bottomRight: bottomRight
-    // }
     let headHeight = Math.abs(data.pose.poseLandmarks[rightEyeIdx].y - data.pose.poseLandmarks[mouthRightIdx].y);
 
     let bounds = {
@@ -214,10 +192,8 @@ let getHeadBounds = (data) =>
 let isActive = (data) =>
 {
 
-
     if (!data.pose.poseLandmarks) return false
 
-    // let rightHipX = data.pose.poseLandmarks[rightHipIdx].x
     let rightShoulderX = data.pose.poseLandmarks[rightShoulderIdx].x
     let rightHandX = data.pose.poseLandmarks[rightHandIdx].x
 
@@ -225,14 +201,8 @@ let isActive = (data) =>
         return false
 
     // normalize
-    // let rightHandXNorm = rightHandX / handsfree.debug.$video.videoWidth
-    // console.log(rightHandX)
 
-    // also require y osition higher than average of the hip and shoudler maybe?
 
-    // use the furthest value out of shoulder and hip (to account for hi movements while playing)
-    // let boundary = Math.min(rightShoulderX, rightHipX) - activeZoneMargin
-    // let Xboundary = rightShoulderX - activeZoneMarginX
     let Xboundary = getActiveZoneXThresh(data)
 
     if (rightHandX <= Xboundary)
@@ -274,14 +244,12 @@ let drawActiveZone = (data) =>
 
     // then you do...
 
-    // context.fillStyle = 'green';
     // https://stackoverflow.com/questions/442404/retrieve-the-position-x-y-of-an-html-element
     let el = document.querySelector('#debugger-holder');
     let width = el.offsetWidth
     let height = el.offsetHeight
 
-    // let width = this.handsfree.debug.$video.videoWidth
-    // let height = this.handsfree.debug.$video.videoHeight
+
 
     // TODO: the width and hieght don't change even though the video changes size, not sure 
 
@@ -298,34 +266,21 @@ let drawActiveZone = (data) =>
     let activeRectWidth = canvas.width * activeZoneXThresh
     let activeRectXPos = canvas.width * (1 - activeZoneXThresh)
 
-    // context.fillStyle = 'rgba(225,0,0,0.5)';
     context.fillStyle = isActive(data) ? activeColor : inactiveColor;
     context.fillRect(activeRectXPos, 0, activeRectWidth, canvas.height);
 
     // draw nonDead zone darker
     context.fillStyle = 'rgba(0,0,0,0.5)';
-    // context.fillRect(activeRectXPos, canvas.height * highDeadZone, activeRectWidth, canvas.height * (highDeadZone - lowDeadZone));
     context.fillRect(activeRectXPos, canvas.height * (1 - highDeadZone), activeRectWidth, canvas.height * (highDeadZone - lowDeadZone));
 
     //draw head thing
     let headBounds = getHeadBounds(data);
     if (!headBounds) return null;
-    // console.log(headBounds)
 
-    // context.fillStyle = 'rgba(0,225,0,0.5)';
     context.fillStyle = swipeBoundsColor;
     context.fillRect((1 - headBounds.x) * canvas.width, headBounds.y * canvas.height, headBounds.width * canvas.width, headBounds.height * canvas.height);
 
-    //draw low dead zone:
 
-    // context.fillStyle = 'rgba(0,0,255,1)';
-    // // context.lineWidth = 100;
-    // context.beginPath();
-    // context.moveTo(activeRectXPos, canvas.height * lowDeadZOne);
-    // context.moveTo(activeRectXPos + activeRectWidth, canvas.height * lowDeadZOne);
-    // context.moveTo(0, 0)
-    // context.moveTo(canvas.width, canvas.height)
-    // context.stroke();
 
 }
 
@@ -334,24 +289,11 @@ let drawActiveZone = (data) =>
 
 handsfree.use('consoleLogger', (data) =>
 {
-    // console.log("DATA: " + JSON.stringify(data))
-
     if (!data.pose.poseLandmarks) return
 
-    // console.log(data.pose.poseLandmarks)
     let gesture = swipeGesture.update(data);
     if (gesture)
     {
-        // var flashMessages = document.getElementsByClassName('js-flash-message');
-        // //show first flash message avilable in your page
-        // showFlashMessage(flashMessages[0]);
-        // if (gesture === " swipeRight")
-        // {
-
-        // }
-
-        // console.log(gesture);
-        // postMessage(gesture);
         updateDistorsionTextStatus(gesture);
     }
 
@@ -367,7 +309,6 @@ handsfree.use('consoleLogger', (data) =>
             'Accept': 'application/json, text/plain, */*',
         },
         body: JSON.stringify({ active: isActive(data), pose: data.pose.poseLandmarks, swipe: gesture, exprVal: exprVal, dist: distorsionOn })
-        // body: { name: "sebastian" }
     }).then(res =>
     {
         // console.log("Request complete! response:", res);
@@ -388,11 +329,6 @@ let normalize = (val, low, high, targetLow = 0, targetHigh = 1) =>
 }
 
 
-// function showFlashMessage(element)
-// {
-//     var event = new CustomEvent('showFlashMessage');
-//     element.dispatchEvent(event);
-// };
 
 
 
@@ -400,16 +336,8 @@ handsfree.use('UIupdater', (data) =>
 {
     if (!data.pose.poseLandmarks) return
 
-    // document.getElementById("right-hand-x").textContent = "Right Hand x: " + data.pose.poseLandmarks[rightHandIdx].x;
-    // document.getElementById("right-hand-y").textContent = "Right Hand y: " + data.pose.poseLandmarks[rightHandIdx].y;
 
-
-    // let exprVal = normalize(1 - data.pose.poseLandmarks[rightHandIdx].y, 0.2, 0.8);
     let exprVal = normalize(1 - data.pose.poseLandmarks[rightHandIdx].y, lowDeadZone, highDeadZone);
-    // document.getElementById("expression-indicator").textContent = "Expression: " + exprVal;
-    // document.getElementById("active-indicator").textContent = "Is Active: " + isActive(data);
-
-    // drawActiveZone(getActiveZoneXThresh(data));
 
 
     if (activeZoneCalibrationOn)
@@ -458,12 +386,10 @@ export function startCalibration()
         countdown.innerText = "";
         activeZoneCalibrationOn = false;
     }, timeInterval * timeIdx++);
-    // schedTime += 2 * timeInterval;
 
 
     if (audioFeedback)
     {
-        // setTimeout(() => window.speechSynthesis.speak(new SpeechSynthesisUtterance('Calibrating the height of the minimum value')), schedTime);
         setTimeout(() => window.speechSynthesis.speak(new SpeechSynthesisUtterance('Please hold your right hand at the height corresponding to the minimum parameter value, zero')), timeInterval * timeIdx++);
         timeIdx += 3;
     }
@@ -496,8 +422,6 @@ export function startCalibration()
     {
         countdown.innerText = "";
         highDeadZoneCalibrationOn = false;
-        // calibrationIndicator.innerText = "Calibrating complete";
-        // window.speechSynthesis.speak(new SpeechSynthesisUtterance('Calibration complete'))
     }, timeInterval * timeIdx++);
 
 
@@ -533,7 +457,6 @@ export function startCalibration()
 function setActiveZonePosition(data)
 {
     if (!data.pose.poseLandmarks) return null
-    // let rightHipX = data.pose.poseLandmarks[rightHipIdx].x
     let rightShoulderX = data.pose.poseLandmarks[rightShoulderIdx].x
     let rightHandX = data.pose.poseLandmarks[rightHandIdx].x
     if (!rightShoulderX) return null
@@ -543,22 +466,16 @@ function setActiveZonePosition(data)
 function setLowDeadZonePosition(data)
 {
     if (!data.pose.poseLandmarks) return null
-    // let rightHipX = data.pose.poseLandmarks[rightHipIdx].x
-    // let rightShoulderX = data.pose.poseLandmarks[rightShoulderIdx].x
     let rightHandY = data.pose.poseLandmarks[rightHandIdx].y
     if (!rightHandY) return null
-    // activeZoneMarginX = - rightHandX + rightShoulderX
     lowDeadZone = (1 - rightHandY);
 }
 
 function setHighDeadZonePosition(data)
 {
     if (!data.pose.poseLandmarks) return null
-    // let rightHipX = data.pose.poseLandmarks[rightHipIdx].x
-    // let rightShoulderX = data.pose.poseLandmarks[rightShoulderIdx].x
     let rightHandY = data.pose.poseLandmarks[rightHandIdx].y
     if (!rightHandY) return null
-    // activeZoneMarginX = - rightHandX + rightShoulderX
     highDeadZone = (1 - rightHandY);
 }
 

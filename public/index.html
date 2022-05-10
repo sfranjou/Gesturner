@@ -9,20 +9,15 @@
     />
     <style>
       .debug {
-        /* width: 200; */
-        /* height: 50%; */
         margin-right: 400px;
       }
 
       .row {
         display: flex;
         flex-direction: row;
-        /* gap: 20px; */
       }
 
       .column {
-        /* flex: 50%; */
-
         display: flex;
         flex-direction: column;
 
@@ -39,8 +34,6 @@
       }
 
       .button-container {
-        /* flex-direction: column; */
-        /* flex: 20%; */
         justify-content: center;
         align-items: center;
         margin: auto;
@@ -71,7 +64,6 @@
 <body>
   <script type="module" src="src/pose.js"></script>
   <script type="module" src="src/speechRec.js"></script>
-  <!-- <script type="module" src="src/audioSource.js"></script> -->
 
   <h1 class="text-center display-1" style="margin: auto">Gesturner</h1>
   <div class="row">
@@ -128,11 +120,6 @@
             >Speech Input</label
           >
         </div>
-
-        <!-- <div class="select">
-          <label for="audioSource">Audio input source: </label
-          ><select id="audioSource"></select>
-        </div> -->
 
         <button id="calibrate-button" type="button" class="btn btn-primary">
           Calibrate

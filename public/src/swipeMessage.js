@@ -5,7 +5,6 @@
 // If you want to remove it from the page after the fadeout
 // target.addEventListener('transitionend', () => target.remove());
 
-// import { text } from "express";
 
 export function postMessage(message)
 {
@@ -14,7 +13,6 @@ export function postMessage(message)
     alert.style = "transition: opacity 0.5s";
     alert.textContent = message;
 
-    // alert.addEventListener('click', () => alert.style.opacity = '0'); //start fasding out after being loaded
     alert.addEventListener('click', () => alert.remove()); //start fasding out after being loaded
     alert.addEventListener('transitionend', () => { alert.remove(); console.log("removed") });
 
@@ -22,7 +20,6 @@ export function postMessage(message)
 
     const holder = document.getElementById('messageHolder');
     holder.appendChild(alert);
-    // alert.style.opacity = '0'
     setTimeout(() => { alert.style.opacity = 0 }, 500)
 
 }
@@ -35,7 +32,5 @@ export function updateDistorsionTextStatus(gesture)
     let textOff = (gesture === "swipeLeft") ? cleanText : distText;
 
     textOn.className = "h3 font-weight-bold text-success";
-    // textOn.style = "green";
     textOff.className = "h3 font-weight-normal text-secondary"
-    // textOff.style = "black"
 }

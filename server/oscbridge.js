@@ -1,33 +1,19 @@
-// var OSC = require("osc-js");
 
-// var oscPort = 2399
 var oscPort = 3005
 var listenPort = 0
-// var oscHost = "::1" //"localhost" // "127.0.0.1"
 var oscHost = "localhost" // "127.0.0.1"
 
-// osc = new OSC()
 
-
-// var OSC = require("osc-js");
 var osc = require("osc");
-// var osc = new OSC.
-// console.log("OSC: ")
-// console.log(osc)
-// Create an osc.js UDP Port listening on port 57121.
+
+// Create an osc.js UDP Port listening on port listenPort.
 var udpPort = new osc.UDPPort({
     localAddress: oscHost, //"0.0.0.0",
     localPort: listenPort,
     broadcast: true
-    // metadata: true
 });
 
-// Listen for incoming OSC messages.
-// udpPort.on("message", function (oscMsg, timeTag, info)
-// {
-//     console.log("An OSC message just arrived!", oscMsg);
-//     console.log("Remote info is: ", info);
-// });
+
 
 // Open the socket.
 udpPort.open();
