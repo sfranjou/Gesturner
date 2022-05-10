@@ -39,7 +39,7 @@ let audioFeedback = true
 const headXMargin = 0
 // const headHeight = 0.3
 let headBoxHeightScaling = 3; // height of head bounds compared to eye-mouth distance
-const headBoxYOffset = 1; //offset in terms of eye-mouth distance
+const headBoxYOffset = 0.2; //offset in terms of eye-mouth distance
 
 let headBoxCalibrationOn = false;
 
@@ -474,7 +474,7 @@ export function startCalibration()
     {
 
         lowDeadZoneCalibrationOn = true;
-        calibrationIndicator.innerText = "Calibrating Low dead zone";
+        calibrationIndicator.innerText = "Calibrating minimum value height";
         countdown.innerText = "3";
     }, timeInterval * timeIdx++);
     setTimeout(() => { countdown.innerText = "2" }, timeInterval * timeIdx++);
@@ -490,7 +490,7 @@ export function startCalibration()
     setTimeout(() =>
     {
         highDeadZoneCalibrationOn = true;
-        calibrationIndicator.innerText = "Calibrating high dead zone";
+        calibrationIndicator.innerText = "Calibrating maximum value height";
         countdown.innerText = "3";
     }, timeInterval * timeIdx++);
     setTimeout(() => { countdown.innerText = "2" }, timeInterval * timeIdx++);

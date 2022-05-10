@@ -4,6 +4,7 @@ import { startCalibration } from "./pose.js";
 // new speech recognition object
 var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
 var recognition = new SpeechRecognition();
+var listening = true;
 
 // This runs when the speech recognition service starts
 recognition.onstart = function ()
@@ -22,7 +23,8 @@ recognition.onspeechend = function ()
 recognition.onend = function ()
 {
     // when user is done speaking
-    recognition.start();
+    if (listening)
+        recognition.start();
     // console.log("RESTARTED")
     // recognition.start();
 }
@@ -39,23 +41,40 @@ recognition.onresult = function (event)
     // if they ask for help, turn on audio and start tutorial
     if (transcript.includes("help"))
     {
-        muteButton.setAttribute("checked", "");
+        // muteButton.setAttribute("checked", "");
         setTimeout(startCalibration(), 100);
     }
-    else if (transcript.includes("turn on") || transcript.includes("unmute"))
+    else if (transcript.includes("toggle sound") || transcript.includes("toggle mute"))
     {
-        muteButton.setAttribute("checked", "");
+        muteButton.click();
     }
-    else if (transcript.includes("turn off") || transcript.includes("mute"))
-    {
-        muteButton.removeAttribute("checked");
-    }
-    else if (transcript.includes("calibrate") || transcript.includes("calibration"))
+    // else if (transcript.includes("turn off") || transcript.includes("mute"))
+    // {
+    //     muteButton.removeAttribute("checked");
+    // }
+    else if (transcript.includes("calibrate") || transcript.includes("Start calibration") || transcript.includes("Start calibration"))
     {
         setTimeout(startCalibration(), 100);
+    }
+    else if (transcript.includes("toggle listening") || transcript.includes("stop listening") || transcript.includes("disable speech input"))
+    {
+        let listeningButton = document.getElementById("listening-button");
+        listeningButton.click();
     }
     // recognition.start();
 };
+
+
+
+let listeningButton = document.getElementById("listening-button");
+listeningButton.addEventListener('click', () =>
+{
+    listening = !listening;
+    if (listening)
+        recognition.start();
+    else
+        recognition.stop();
+})
 
 // start recognition
 recognition.start();
